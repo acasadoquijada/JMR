@@ -23,7 +23,7 @@ public class CargaImagenes {
     private ArrayList<Float> pesos;
     private ArrayList<Texture> imagenes;
     
-    public CargaImagenes(){
+    public CargaImagenes(int n){
         
         pesos = new ArrayList();
         imagenes = new ArrayList();
@@ -37,7 +37,7 @@ public class CargaImagenes {
         Texture texture = loader.getTexture();
         
         
-        for(int i = 1; i <= 10; i++) {
+        for(int i = 1; i <= n; i++) {
             pesos.add(num_aleatorio.nextFloat());
             imagenes.add(texture);
             

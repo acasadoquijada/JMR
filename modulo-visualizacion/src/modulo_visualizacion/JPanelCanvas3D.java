@@ -73,7 +73,7 @@ public class JPanelCanvas3D extends JPanel {
      
         comportamientoRaton();
 
-        inicializarArrayTransformadas(2);
+        /*inicializarArrayTransformadas(2);
         
         inicializarArrayGrupoTransformadas(2);
         
@@ -82,7 +82,7 @@ public class JPanelCanvas3D extends JPanel {
         
         Vector3f vector = new Vector3f(0.0f,0.0f,0.0f);
 
-        CargaImagenes ci = new CargaImagenes();
+        CargaImagenes ci = new CargaImagenes(2);
   
         for(int i = 0; i < 2; i++){
             dibujarImagen(ci.getImagenes().get(1),vector,i);
@@ -90,6 +90,13 @@ public class JPanelCanvas3D extends JPanel {
         }
         
         
+        
+        */
+        
+        VisualizacionSecuencial vs = new VisualizacionSecuencial();
+        
+        objRoot = vs.crearEscena();
+        // objRoot = vs.crearEscena(null);
                 
         crearFondo();
         
