@@ -1,7 +1,7 @@
 /**
  * 
  */
-package displaymodule;
+package visualizationmodule;
 
 /**
  * @author Alejandro

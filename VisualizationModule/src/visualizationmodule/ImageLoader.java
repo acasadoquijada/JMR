@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package displaymodule;
+package visualizationmodule;
 
 import com.sun.j3d.utils.image.TextureLoader;
 import java.awt.Container;
