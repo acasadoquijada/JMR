@@ -1,9 +1,9 @@
-# Modulo de visualización
+#Display module
 
-Módulo de visualización JMR
+JMR's display module
 
-Al tratarse de una versión primeriza contiene ficheros que serán eliminados en el futuro.
+Being an early version contains files that will be eliminated in the future.
 
-[Licencia](LICENSE)
+[License](LICENSE)
 
-Nota: Esta licencia SOLO afecta al módulo de visualización
+This license ONLY affects the display module
