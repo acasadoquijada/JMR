@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modulo_visualizacion;
+package displaymodule;
 
 import com.sun.j3d.utils.image.TextureLoader;
 import java.awt.Container;
@@ -18,12 +18,12 @@ import javax.media.j3d.Texture;
  *
  * @author Alejandro
  */
-public class CargaImagenes {
+public class ImageLoader {
     
     private ArrayList<Float> pesos;
     private ArrayList<Texture> imagenes;
     
-    public CargaImagenes(int n){
+    public ImageLoader(int n){
         
         pesos = new ArrayList();
         imagenes = new ArrayList();

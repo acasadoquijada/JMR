@@ -1,7 +1,7 @@
 /**
  * 
  */
-package modulo_visualizacion;
+package displaymodule;
 
 /**
  * @author Alejandro
@@ -93,7 +93,7 @@ public class JPanelCanvas3D extends JPanel {
         
         */
         
-        VisualizacionSecuencial vs = new VisualizacionSecuencial();
+        SecuencialVisualization vs = new SecuencialVisualization();
         
         objRoot = vs.crearEscena();
         // objRoot = vs.crearEscena(null);

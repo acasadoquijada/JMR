@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modulo_visualizacion;
+package displaymodule;
 
 /**
  *
  * @author Alejandro
  */
-public class Modulo_visualizacion {
+public class DisplayModule {
 
     /**
      * @param args the command line arguments
@@ -17,7 +17,7 @@ public class Modulo_visualizacion {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new modulo_visualizacion.MiFrame().setVisible(true);
+                new displaymodule.MiFrame().setVisible(true);
             }
         });    }
     

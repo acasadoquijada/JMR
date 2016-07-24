@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modulo_visualizacion;
+package displaymodule;
 
 import java.util.ArrayList;
 import javax.media.j3d.BranchGroup;
@@ -17,22 +17,22 @@ import javax.vecmath.Vector3f;
  * @author alejandro
  */
 
-public abstract class VisualizacionPadre {
+public abstract class AbstractVisualization {
     
     protected ArrayList<Transform3D> transformadas;
     protected ArrayList<TransformGroup> grupo_transformadas;
     
     protected int num_imagenes;
     protected BranchGroup objRoot;
-    protected CargaImagenes ci;
+    protected ImageLoader ci;
     
     
-    protected VisualizacionPadre(){
+    protected AbstractVisualization(){
         this.num_imagenes=5;
         this.objRoot = new BranchGroup();
         this.inicializarGrupoTransformadas(num_imagenes);
         this.inicializarTransformadas(num_imagenes);
-        this.ci = new CargaImagenes(num_imagenes);
+        this.ci = new ImageLoader(num_imagenes);
 
     }
     

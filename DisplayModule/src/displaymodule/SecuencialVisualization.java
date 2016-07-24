@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modulo_visualizacion;
+package displaymodule;
 
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Primitive;
@@ -20,9 +20,9 @@ import javax.vecmath.Vector3f;
  *
  * @author alejandro
  */
-public class VisualizacionSecuencial extends VisualizacionPadre{
+public class SecuencialVisualization extends AbstractVisualization{
     
-    public VisualizacionSecuencial(){
+    public SecuencialVisualization(){
         
         super();
         //this.num_imagenes= 5;
