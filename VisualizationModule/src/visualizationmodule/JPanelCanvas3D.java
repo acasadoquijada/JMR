@@ -95,7 +95,7 @@ public class JPanelCanvas3D extends JPanel {
         
         SecuencialVisualization vs = new SecuencialVisualization();
         
-        objRoot = vs.crearEscena();
+        objRoot = vs.createScene();
         // objRoot = vs.crearEscena(null);
                 
         crearFondo();

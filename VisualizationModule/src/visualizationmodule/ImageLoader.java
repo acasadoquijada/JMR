@@ -20,17 +20,17 @@ import javax.media.j3d.Texture;
  */
 public class ImageLoader {
     
-    private ArrayList<Float> pesos;
-    private ArrayList<Texture> imagenes;
+    private ArrayList<Float> weights;
+    private ArrayList<Texture> images;
     
     public ImageLoader(int n){
         
-        pesos = new ArrayList();
-        imagenes = new ArrayList();
+        weights = new ArrayList();
+        images = new ArrayList();
         
-        Random num_aleatorio = new Random();
+        Random random_number = new Random();
         
-                TextureLoader loader = new TextureLoader
+        TextureLoader loader = new TextureLoader
         ("C:\\Users\\Alejandro\\Desktop\\pug.png",
                 new Container());
         
@@ -38,17 +38,18 @@ public class ImageLoader {
         
         
         for(int i = 1; i <= n; i++) {
-            pesos.add(num_aleatorio.nextFloat());
-            imagenes.add(texture);
+            
+            weights.add(random_number.nextFloat());
+            images.add(texture); 
             
         }
     }
         
-        public ArrayList<Float> getPesos(){
-            return pesos;
+        public ArrayList<Float> getWeights(){
+            return weights;
         }
         
-        public ArrayList<Texture> getImagenes(){
-            return imagenes;
+        public ArrayList<Texture> getImages(){
+            return images;
     }   
 }

@@ -25,39 +25,52 @@ public class SecuencialVisualization extends AbstractVisualization{
     public SecuencialVisualization(){
         
         super();
-        //this.num_imagenes= 5;
         
     }
     
     
     @Override
-    public void inicializarTransformadas(int num_imagenes) {
-        super.inicializarTransformadas(num_imagenes);
+    public void initializeTransforms3D(int imagesNumber) {
+        super.initializeTransforms3D(imagesNumber);
     }
 
     @Override
-    public void inicializarGrupoTransformadas(int num_imagenes) {
-        super.inicializarGrupoTransformadas(num_imagenes);
+    public void initializeTransformsGroup(int imagesNumber) {
+        super.initializeTransformsGroup(imagesNumber);
     }
 
     @Override
-    public BranchGroup crearEscena() {
+    public BranchGroup createScene() {
       
-        Vector3f vector = new Vector3f(0.0f,0.0f,0.0f);
+        Vector3f rightVector = new Vector3f(0.0f,0.0f,0.0f);
+        Vector3f leftVector = new Vector3f(0.0f,0.0f,0.0f);
         
-        for(int i = 0; i < this.num_imagenes; i++){
-            dibujarImagen(ci.getImagenes().get(i),vector,i);
-            vector.x += 1.5f;
+        drawImage(ci.getImages().get(0),rightVector,0);
+        
+        for(int i = 1; i < this.imagesNumber; i++){
+            
+            System.out.println(ci.getWeights().get(i));
+            
+            if(ci.getWeights().get(i) >= 0.5f){
+                rightVector.x += 1.5;
+                drawImage(ci.getImages().get(i),rightVector,i);
+                
+            }
+            
+            else{
+                leftVector.x += -1.5;
+                drawImage(ci.getImages().get(i),leftVector,i);
+            } 
         }
         
         return this.objRoot;
     }
 
     @Override
-    public void dibujarImagen(Texture tex, Vector3f pos, int indice) {
+    public void drawImage(Texture tex, Vector3f pos, int index) {
         
-        Transform3D trans = this.transformadas.get(indice);
-        TransformGroup tg = this.grupo_transformadas.get(indice);
+        Transform3D trans = this.transforms.get(index);
+        TransformGroup tg = this.transformsGroup.get(index);
                 
         Appearance ap = new Appearance();
         

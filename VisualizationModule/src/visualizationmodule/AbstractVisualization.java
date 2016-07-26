@@ -19,45 +19,45 @@ import javax.vecmath.Vector3f;
 
 public abstract class AbstractVisualization {
     
-    protected ArrayList<Transform3D> transformadas;
-    protected ArrayList<TransformGroup> grupo_transformadas;
+    protected ArrayList<Transform3D> transforms;
+    protected ArrayList<TransformGroup> transformsGroup;
     
-    protected int num_imagenes;
+    protected int imagesNumber;
     protected BranchGroup objRoot;
     protected ImageLoader ci;
     
     
     protected AbstractVisualization(){
-        this.num_imagenes=5;
+        this.imagesNumber=5;
         this.objRoot = new BranchGroup();
-        this.inicializarGrupoTransformadas(num_imagenes);
-        this.inicializarTransformadas(num_imagenes);
-        this.ci = new ImageLoader(num_imagenes);
+        this.initializeTransformsGroup(imagesNumber);
+        this.initializeTransforms3D(imagesNumber);
+        this.ci = new ImageLoader(imagesNumber);
 
     }
     
-    protected void inicializarTransformadas(int num_imagenes){
+    protected void initializeTransforms3D(int imagesNumber){
         Transform3D t;
-        transformadas = new ArrayList();
+        transforms = new ArrayList();
         
-        for(int i = 0;i < num_imagenes; i++){
+        for(int i = 0;i < imagesNumber; i++){
             t = new Transform3D();    
-            transformadas.add(t);
+            transforms.add(t);
         }
     }
 
-    protected void inicializarGrupoTransformadas(int num_imagenes){
+    protected void initializeTransformsGroup(int imagesNumber){
         
         TransformGroup tg;
-        grupo_transformadas = new ArrayList();
+        transformsGroup = new ArrayList();
 
-        for(int i = 0;i < num_imagenes; i++){
+        for(int i = 0;i < imagesNumber; i++){
             tg = new TransformGroup();    
-            grupo_transformadas.add(tg);
+            transformsGroup.add(tg);
         }
     
     }
-    abstract BranchGroup crearEscena();
-    abstract void dibujarImagen(Texture tex, Vector3f pos, int indice);
+    abstract BranchGroup createScene();
+    abstract void drawImage(Texture tex, Vector3f pos, int index);
     
 }
