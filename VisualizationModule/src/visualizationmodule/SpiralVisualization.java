@@ -15,14 +15,17 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
 
-
 /**
  *
  * @author alejandro
  */
-public class SecuencialVisualization extends AbstractVisualization{
+public class SpiralVisualization extends AbstractVisualization {
+
     
-    public SecuencialVisualization(){
+    private Vector3f vector;
+    private int order;
+    
+    public SpiralVisualization(){
         
         super();
         
@@ -38,32 +41,89 @@ public class SecuencialVisualization extends AbstractVisualization{
     public void initializeTransformsGroup(int imagesNumber) {
         super.initializeTransformsGroup(imagesNumber);
     }
-
+    
+    
+    
     @Override
     public BranchGroup createScene() {
-      
-        Vector3f rightVector = new Vector3f(0.0f,0.0f,0.0f);
-        Vector3f leftVector = new Vector3f(0.0f,0.0f,0.0f);
+
+        vector = new Vector3f(0.0f,0.0f,0.0f);
         
-        drawImage(ci.getImages().get(0),rightVector,0);
+        drawImage(ci.getImages().get(0),vector,0);
+
+        order=1;
+        
+        while((order*order) <= this.imagesNumber){
+            order++;
+        }
+
         
         for(int i = 1; i < this.imagesNumber; i++){
             
-            System.out.println(ci.getWeights().get(i));
+            interiorCube(i);
+      
+
             
-            if(ci.getWeights().get(i) >= 0.5f){
-                rightVector.x += 1.5;
-                drawImage(ci.getImages().get(i),rightVector,i);
-                
-            }
+            System.out.println("i: " + i + " " + vector);
+
             
-            else{
-                leftVector.x += -1.5;
-                drawImage(ci.getImages().get(i),leftVector,i);
-            } 
+            drawImage(ci.getImages().get(i),vector,i);
+            
+
         }
-        
+
+
+    
         return this.objRoot;
+
+    }
+    
+    
+    private void interiorCube(int index){
+        
+        int n = index%9;
+       
+        switch(n){
+            case 0: // Es 9
+                vector.y += 1.1f;
+                break;
+            case 1: // Es 1
+               vector.y += 1.1f;  
+                break;
+
+            case 2: // Es 2
+               vector.x += 1.1f; 
+                break;
+
+            case 3: // Es 3
+               vector.y -=1.1f;
+                break;
+
+            case 4: // Es 4
+               vector.y -=1.1f;
+                break;                    
+
+            case 5: // Es 5
+               vector.x -=1.1f;
+                break;
+
+            case 6: // Es 6
+               vector.x -=1.1f;
+                break;  
+
+            case 7: // Es 7
+               vector.y +=1.1f;
+                break;
+                
+            case 8:
+                vector.y +=1.1;
+                break;
+                    
+            }
+    }
+    
+    private void exteriorCube(int index){
+        
     }
 
     @Override
@@ -100,7 +160,7 @@ public class SecuencialVisualization extends AbstractVisualization{
         
         tg.addChild(b);
         
-        this.objRoot.addChild(tg);
+        this.objRoot.addChild(tg);    
     }
-
+    
 }
