@@ -22,9 +22,9 @@ import javax.vecmath.Vector3f;
  */
 public class SecuencialVisualization extends AbstractVisualization{
     
-    public SecuencialVisualization(){
+    public SecuencialVisualization(int num){
         
-        super();
+        super(num);
         
     }
     

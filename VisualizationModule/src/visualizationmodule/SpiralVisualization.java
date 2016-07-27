@@ -19,15 +19,21 @@ import javax.vecmath.Vector3f;
  *
  * @author alejandro
  */
+
+/*
+
+http://javaconceptoftheday.com/how-to-create-spiral-of-numbers-matrix-in-java/
+
+*/
 public class SpiralVisualization extends AbstractVisualization {
 
     
     private Vector3f vector;
     private int order;
     
-    public SpiralVisualization(){
+    public SpiralVisualization(int num){
         
-        super();
+        super(num);
         
     }
     
@@ -48,83 +54,116 @@ public class SpiralVisualization extends AbstractVisualization {
     public BranchGroup createScene() {
 
         vector = new Vector3f(0.0f,0.0f,0.0f);
-        
-        drawImage(ci.getImages().get(0),vector,0);
 
-        order=1;
+        /*     
+        Primer loop 3 imágenes
+        Segundo loop 1 imágenes
+        Tercer loop 3 imágenes
+        Cuarto loop 2 imágenes
+        */
         
-        while((order*order) <= this.imagesNumber){
-            order++;
+        int image = 0;
+        
+        boolean cont = true;
+        
+        int maxLoop1 = 3; // +1
+         
+        int maxLoop2 = 1; // +2
+         
+        int maxLoop3 = 3; // +2
+          
+        int maxLoop4 = 2; // +2 
+         
+        while ((cont))
+        {
+            
+            //First loop
+            
+            int i=1;
+            while(i <=maxLoop1 && cont){
+
+                if(image == 0){
+                    drawImage(ci.getImages().get(image),vector,image);
+                }
+                
+                else{
+                    vector.x +=1.1;
+                    drawImage(ci.getImages().get(image),vector,image);
+
+                }
+                
+                image++;
+                i++;
+                
+                if(image >= this.imagesNumber)
+                    cont=false;
+            }
+                        
+            // Second loop
+            
+            i=1;
+            while(i <=maxLoop2 && cont){
+                
+                vector.y -= 1.1;
+                drawImage(ci.getImages().get(image),vector,image);
+                
+                image++;
+                i++;
+                
+                if(image >= this.imagesNumber)
+                    cont=false;
+  
+            }
+            
+            // Third loop
+            
+            i=1;
+            while(i <= maxLoop3 && cont){
+                
+                vector.x -= 1.1;
+                drawImage(ci.getImages().get(image),vector,image);
+                
+                image++;
+                i++;
+                
+                if(image >= this.imagesNumber)
+                    cont=false;
+            }
+            
+            // Fourth loop
+            
+            i=1;
+            while(i <= maxLoop4 && cont){
+                
+                vector.y += 1.1;
+                drawImage(ci.getImages().get(image),vector,image);
+                
+                image++;
+                i++;
+                
+                if(image >= this.imagesNumber)
+                    cont=false;
+            }
+            
+            
+            if(maxLoop1 == 3){
+                maxLoop1++;
+            }
+            
+            else{
+                maxLoop1+=2;
+            }
+            
+            maxLoop2+=2;
+            maxLoop3+=2;
+            maxLoop4+=2;
+
         }
-
-        
-        for(int i = 1; i < this.imagesNumber; i++){
-            
-            interiorCube(i);
-      
-
-            
-            System.out.println("i: " + i + " " + vector);
-
-            
-            drawImage(ci.getImages().get(i),vector,i);
-            
-
-        }
-
-
     
         return this.objRoot;
 
     }
-    
-    
-    private void interiorCube(int index){
-        
-        int n = index%9;
-       
-        switch(n){
-            case 0: // Es 9
-                vector.y += 1.1f;
-                break;
-            case 1: // Es 1
-               vector.y += 1.1f;  
-                break;
 
-            case 2: // Es 2
-               vector.x += 1.1f; 
-                break;
-
-            case 3: // Es 3
-               vector.y -=1.1f;
-                break;
-
-            case 4: // Es 4
-               vector.y -=1.1f;
-                break;                    
-
-            case 5: // Es 5
-               vector.x -=1.1f;
-                break;
-
-            case 6: // Es 6
-               vector.x -=1.1f;
-                break;  
-
-            case 7: // Es 7
-               vector.y +=1.1f;
-                break;
-                
-            case 8:
-                vector.y +=1.1;
-                break;
-                    
-            }
-    }
-    
-    private void exteriorCube(int index){
-        
-    }
 
     @Override
     public void drawImage(Texture tex, Vector3f pos, int index) {

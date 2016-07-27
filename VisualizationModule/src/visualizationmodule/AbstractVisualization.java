@@ -27,8 +27,8 @@ public abstract class AbstractVisualization {
     protected ImageLoader ci;
     
     
-    protected AbstractVisualization(){
-        this.imagesNumber = 11;
+    protected AbstractVisualization(int num){
+        this.imagesNumber = num;
         this.objRoot = new BranchGroup();
         this.initializeTransformsGroup(imagesNumber);
         this.initializeTransforms3D(imagesNumber);
