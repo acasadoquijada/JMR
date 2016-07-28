@@ -3,7 +3,10 @@
 Being an early version it contains files that will be eliminated in the future.
 
 Note: This is an early version, for this reason the images displayed are the same, but this will change in the future
+
 Note: The interface will be changen soon
+
+The image displayed was taken from [here](https://en.wikipedia.org/wiki/Pug#/media/File:Sad-pug.jpg)
 
 ##Introduction
 
