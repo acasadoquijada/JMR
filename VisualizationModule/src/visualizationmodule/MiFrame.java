@@ -30,7 +30,7 @@ public class MiFrame extends JFrame {
                 
         c.setLayout( new BorderLayout() );
         
-        this.setTitle("Módulo de visualización");
+        this.setTitle("Visualization module");
 
         crearHJV3D();
         
@@ -83,12 +83,12 @@ public class MiFrame extends JFrame {
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
 
-        jmenuVisualizacion.setText("Visualización");
+        jmenuVisualizacion.setText("Visualization");
 
-        jmenuVisDefecto.setText("Defecto");
+        jmenuVisDefecto.setText("Secuencial");
         jmenuVisualizacion.add(jmenuVisDefecto);
 
-        jMenuItem2.setText("Espriall");
+        jMenuItem2.setText("Spiral");
 
         jmenuVisualizacion.add(jMenuItem2);
 

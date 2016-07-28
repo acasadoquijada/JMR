@@ -53,15 +53,8 @@ public class SpiralVisualization extends AbstractVisualization {
     @Override
     public BranchGroup createScene() {
 
-        vector = new Vector3f(0.0f,0.0f,0.0f);
+        this.vector = new Vector3f(0.0f,0.0f,0.0f);
 
-        /*     
-        Primer loop 3 imágenes
-        Segundo loop 1 imágenes
-        Tercer loop 3 imágenes
-        Cuarto loop 2 imágenes
-        */
-        
         int image = 0;
         
         boolean cont = true;
@@ -83,12 +76,12 @@ public class SpiralVisualization extends AbstractVisualization {
             while(i <=maxLoop1 && cont){
 
                 if(image == 0){
-                    drawImage(ci.getImages().get(image),vector,image);
+                    drawImage(ci.getImages().get(image),this.vector,image);
                 }
                 
                 else{
-                    vector.x +=1.1;
-                    drawImage(ci.getImages().get(image),vector,image);
+                    this.vector.x +=1.1;
+                    drawImage(ci.getImages().get(image),this.vector,image);
 
                 }
                 
@@ -104,8 +97,8 @@ public class SpiralVisualization extends AbstractVisualization {
             i=1;
             while(i <=maxLoop2 && cont){
                 
-                vector.y -= 1.1;
-                drawImage(ci.getImages().get(image),vector,image);
+                this.vector.y -= 1.1;
+                drawImage(ci.getImages().get(image),this.vector,image);
                 
                 image++;
                 i++;
@@ -120,8 +113,8 @@ public class SpiralVisualization extends AbstractVisualization {
             i=1;
             while(i <= maxLoop3 && cont){
                 
-                vector.x -= 1.1;
-                drawImage(ci.getImages().get(image),vector,image);
+                this.vector.x -= 1.1;
+                drawImage(ci.getImages().get(image),this.vector,image);
                 
                 image++;
                 i++;
@@ -135,8 +128,8 @@ public class SpiralVisualization extends AbstractVisualization {
             i=1;
             while(i <= maxLoop4 && cont){
                 
-                vector.y += 1.1;
-                drawImage(ci.getImages().get(image),vector,image);
+                this.vector.y += 1.1;
+                drawImage(ci.getImages().get(image),this.vector,image);
                 
                 image++;
                 i++;
@@ -189,7 +182,9 @@ public class SpiralVisualization extends AbstractVisualization {
 
         Primitive.GENERATE_TEXTURE_COORDS; 
            
-        Box b = new Box(0.5f,0.5f,0f,primflags,ap);
+        float tam = 0.5f - (index/225f); 
+        
+        Box b = new Box(tam,tam,0f,primflags,ap);
         
         trans.setTranslation(pos);
        
