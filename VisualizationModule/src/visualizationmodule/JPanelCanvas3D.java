@@ -65,6 +65,7 @@ public class JPanelCanvas3D extends JPanel {
         mouseBehaviour();
         
         SpiralVisualization sv = new SpiralVisualization(75);
+        SecuencialVisualization vs = new SecuencialVisualization(6);
         
         objRoot = sv.createScene();
                 

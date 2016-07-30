@@ -5,9 +5,13 @@
  */
 package visualizationmodule;
 
+import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.geometry.Primitive;
 import java.util.ArrayList;
+import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Texture;
+import javax.media.j3d.TextureAttributes;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
@@ -25,6 +29,13 @@ public abstract class AbstractVisualization {
     protected int imagesNumber;
     protected BranchGroup objRoot;
     protected ImageLoader ci;
+    protected int type;
+    
+    protected static final int SECUENCIAL = 0;
+    
+    protected static final int SPIRAL = 1;
+
+
     
     
     protected AbstractVisualization(int num){
@@ -58,6 +69,52 @@ public abstract class AbstractVisualization {
     
     }
     abstract BranchGroup createScene();
-    abstract void drawImage(Texture tex, Vector3f pos, int index);
+    protected void drawImage(Texture tex, Vector3f pos, int index){
+        
+        Transform3D trans = this.transforms.get(index);
+        TransformGroup tg = this.transformsGroup.get(index);
+                
+        Appearance ap = new Appearance();
+        
+        tex.setBoundaryModeS(Texture.WRAP);
+
+        tex.setBoundaryModeT(Texture.WRAP);
+        
+        TextureAttributes texAttr = new TextureAttributes();
+        
+        texAttr.setTextureMode(TextureAttributes.MODULATE);
+
+        ap.setTexture(tex);
+
+        ap.setTextureAttributes(texAttr);    
+        
+        int primflags = Primitive.GENERATE_NORMALS +
+
+        Primitive.GENERATE_TEXTURE_COORDS; 
+         
+        float tam;
+        
+        if(type == SPIRAL){
+            tam = 0.5f - (index/225f); 
+        }
+        
+        else{
+             tam = 0.5f;
+        }
+
+    
+        Box b = new Box(tam,tam,0f,primflags,ap);
+        
+        trans.setTranslation(pos);
+       
+        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        
+        tg.setTransform(trans);
+        
+        tg.addChild(b);
+        
+        this.objRoot.addChild(tg);   
+        
+    };
     
 }

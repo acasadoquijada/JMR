@@ -34,6 +34,7 @@ public class SpiralVisualization extends AbstractVisualization {
     public SpiralVisualization(int num){
         
         super(num);
+        this.type = SPIRAL;
         
     }
     
@@ -160,41 +161,9 @@ public class SpiralVisualization extends AbstractVisualization {
 
     @Override
     public void drawImage(Texture tex, Vector3f pos, int index) {
-        
-        Transform3D trans = this.transforms.get(index);
-        TransformGroup tg = this.transformsGroup.get(index);
-                
-        Appearance ap = new Appearance();
-        
-        tex.setBoundaryModeS(Texture.WRAP);
-
-        tex.setBoundaryModeT(Texture.WRAP);
-        
-        TextureAttributes texAttr = new TextureAttributes();
-        
-        texAttr.setTextureMode(TextureAttributes.MODULATE);
-
-        ap.setTexture(tex);
-
-        ap.setTextureAttributes(texAttr);    
-        
-        int primflags = Primitive.GENERATE_NORMALS +
-
-        Primitive.GENERATE_TEXTURE_COORDS; 
            
-        float tam = 0.5f - (index/225f); 
-        
-        Box b = new Box(tam,tam,0f,primflags,ap);
-        
-        trans.setTranslation(pos);
-       
-        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        
-        tg.setTransform(trans);
-        
-        tg.addChild(b);
-        
-        this.objRoot.addChild(tg);    
+        super.drawImage(tex, pos, index);        
+    
     }
     
 }

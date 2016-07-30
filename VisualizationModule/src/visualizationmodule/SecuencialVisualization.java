@@ -25,6 +25,7 @@ public class SecuencialVisualization extends AbstractVisualization{
     public SecuencialVisualization(int num){
         
         super(num);
+        this.type = SECUENCIAL;
         
     }
     
@@ -69,38 +70,8 @@ public class SecuencialVisualization extends AbstractVisualization{
     @Override
     public void drawImage(Texture tex, Vector3f pos, int index) {
         
-        Transform3D trans = this.transforms.get(index);
-        TransformGroup tg = this.transformsGroup.get(index);
-                
-        Appearance ap = new Appearance();
-        
-        tex.setBoundaryModeS(Texture.WRAP);
+        super.drawImage(tex, pos, index);        
 
-        tex.setBoundaryModeT(Texture.WRAP);
-        
-        TextureAttributes texAttr = new TextureAttributes();
-        
-        texAttr.setTextureMode(TextureAttributes.MODULATE);
-
-        ap.setTexture(tex);
-
-        ap.setTextureAttributes(texAttr);    
-        
-        int primflags = Primitive.GENERATE_NORMALS +
-
-        Primitive.GENERATE_TEXTURE_COORDS; 
-           
-        Box b = new Box(0.5f,0.5f,0f,primflags,ap);
-        
-        trans.setTranslation(pos);
-       
-        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        
-        tg.setTransform(trans);
-        
-        tg.addChild(b);
-        
-        this.objRoot.addChild(tg);
     }
 
 }
