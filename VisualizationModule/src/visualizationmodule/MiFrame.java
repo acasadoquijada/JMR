@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -22,6 +23,15 @@ import javax.swing.JPanel;
  */
 public class MiFrame extends JFrame {
 
+    
+    private JPanel jPanel1 ;
+    private JMenuBar jMenuBar1;
+    private JMenu jMenu1;
+    private JMenu jmenuVisualizacion;
+    private JCheckBoxMenuItem jCheckBoxSecuencial ;
+    private JCheckBoxMenuItem jCheckBoxSpiral;
+    
+    private JPanelCanvas3D hj3d;
     
     public MiFrame() {
         //initComponents();
@@ -46,7 +56,7 @@ public class MiFrame extends JFrame {
     }
     
     private void crearHJV3D(){
-        JPanelCanvas3D hj3d = new JPanelCanvas3D();
+        hj3d = new JPanelCanvas3D();
         
         Dimension d = new Dimension(500,500);
         
@@ -57,14 +67,14 @@ public class MiFrame extends JFrame {
     
     private void crearGUI(){
         
-        JPanel jPanel1 = new javax.swing.JPanel();
-        JMenuBar jMenuBar1 = new javax.swing.JMenuBar();
-        JMenu jMenu1 = new javax.swing.JMenu();
-        JMenu jmenuVisualizacion = new javax.swing.JMenu();
-        JMenuItem jmenuVisDefecto = new javax.swing.JMenuItem();
-        JMenuItem jMenuItem2 = new javax.swing.JMenuItem();
-        JMenuItem jMenuItem3 = new javax.swing.JMenuItem();
-               setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jmenuVisualizacion = new javax.swing.JMenu();
+        jCheckBoxSecuencial = new javax.swing.JCheckBoxMenuItem();
+        jCheckBoxSpiral = new javax.swing.JCheckBoxMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(500, 500));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -85,15 +95,31 @@ public class MiFrame extends JFrame {
 
         jmenuVisualizacion.setText("Visualization");
 
-        jmenuVisDefecto.setText("Secuencial");
-        jmenuVisualizacion.add(jmenuVisDefecto);
+        jCheckBoxSecuencial.setText("Secuencial");
+        jmenuVisualizacion.add(jCheckBoxSecuencial);
+        
+        this.jCheckBoxSecuencial.addActionListener(new java.awt.event.ActionListener() {
+       
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxSecuencialActionPerformed(evt);
+            }
+        });
 
-        jMenuItem2.setText("Spiral");
+        jCheckBoxSpiral.setText("Spiral");
 
-        jmenuVisualizacion.add(jMenuItem2);
+        jmenuVisualizacion.add(jCheckBoxSpiral);
+        
+        
+        this.jCheckBoxSpiral.addActionListener(new java.awt.event.ActionListener() {
+       
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxSpiralActionPerformed(evt);
+            }
+        });
 
-        jMenuItem3.setText("\"escala\"");
-        jmenuVisualizacion.add(jMenuItem3);
+
 
         jMenuBar1.add(jmenuVisualizacion);
 
@@ -101,6 +127,26 @@ public class MiFrame extends JFrame {
 
         pack();
     }
+                       
+    private void jCheckBoxSecuencialActionPerformed(java.awt.event.ActionEvent evt){
+        
+        if(jCheckBoxSpiral.isSelected()){
+            jCheckBoxSpiral.setSelected(false);
+        }
+        
+        hj3d.setVisualization(0);
+    }
+          
+    private void jCheckBoxSpiralActionPerformed(java.awt.event.ActionEvent evt){
+        
+        if(jCheckBoxSecuencial.isSelected()){
+            jCheckBoxSecuencial.setSelected(false);
+        }
+        
+         hj3d.setVisualization(1);
+        
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -145,6 +191,8 @@ public class MiFrame extends JFrame {
         //</editor-fold>
 
         //</editor-fold>
+        
+        System.out.println("AADAWD");
 
         /* Create and display the form */
 

@@ -29,7 +29,7 @@ public abstract class AbstractVisualization {
     protected int imagesNumber;
     protected BranchGroup objRoot;
     protected ImageLoader ci;
-    protected int type;
+    protected int TYPE;
     
     protected static final int SECUENCIAL = 0;
     
@@ -93,8 +93,8 @@ public abstract class AbstractVisualization {
         Primitive.GENERATE_TEXTURE_COORDS; 
          
         float tam;
-        
-        if(type == SPIRAL){
+
+        if(TYPE == SPIRAL){
             tam = 0.5f - (index/225f); 
         }
         

@@ -7,47 +7,28 @@ package visualizationmodule;
  * @author Alejandro
  *
  */
-import java.applet.Applet;
 import java.awt.BorderLayout;
-import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
-import com.sun.j3d.utils.applet.MainFrame; 
-import com.sun.j3d.utils.geometry.Box;
-import com.sun.j3d.utils.geometry.ColorCube;
-import com.sun.j3d.utils.geometry.Primitive;
-import com.sun.j3d.utils.geometry.Sphere;
-import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.*;
-import static java.awt.Color.RED;
-import static java.awt.Color.red;
-import java.awt.Container;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.media.j3d.*;
 import javax.swing.JPanel;
 import javax.vecmath.Color3f;
-import javax.vecmath.Color4f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
-//   HelloJava3Dc renders a single, rotating cube.  
 
 @SuppressWarnings("serial")
 
 public class JPanelCanvas3D extends JPanel {
 
+    private SimpleUniverse simpleU;
+    
     private TransformGroup camara;
     
     private Canvas3D canvas3D;
-    
-    private BranchGroup objRoot;
 
     private float x,y;
     
@@ -60,53 +41,156 @@ public class JPanelCanvas3D extends JPanel {
     private int lastX = 0;
     private int lastY = 0;
     
-    public BranchGroup createSceneGraph() {
-     
-        mouseBehaviour();
+    public BranchGroup spiralVisualization;
+    public BranchGroup secuencialVisualization;
+ 
+    private ArrayList <BranchGroup> visualizationArray;
+    
+    public int currentVisualization = 1;
+    
+    public static final int SECUENCIAL = 0;
+
+    public static final int SPIRAL = 1;
+    
+
+    private void initializeVisualizations(){
         
-        SpiralVisualization sv = new SpiralVisualization(75);
-        SecuencialVisualization vs = new SecuencialVisualization(6);
+        // Secuencial visualization
+        SecuencialVisualization sv = new SecuencialVisualization(6);
         
-        objRoot = sv.createScene();
+        secuencialVisualization = sv.createScene();
+        secuencialVisualization.setCapability(BranchGroup.ALLOW_DETACH);
+
+        
+        createBackground(secuencialVisualization);
+        
+        
+        // Spiral visualization
+        SpiralVisualization vs = new SpiralVisualization(75);
+        
+        spiralVisualization = vs.createScene();
+        spiralVisualization.setCapability(BranchGroup.ALLOW_DETACH);
+
+        createBackground(spiralVisualization);
+        
+        visualizationArray = new ArrayList<>();
                 
-        createBackground();
+        visualizationArray.add(secuencialVisualization);
+        visualizationArray.add(spiralVisualization);
+  
         
-	return objRoot;
-    } 
-     
-    private void createBackground(){
+    }
+
+    private void createBackground(BranchGroup bg){
         Background background = new Background(new Color3f(1.000f, 0.980f, 0.980f));
         BoundingSphere sphere = new BoundingSphere(new Point3d(0,0,0), 100000);
         background.setApplicationBounds(sphere);
-        objRoot.addChild(background);
+        bg.addChild(background);
     }
     
+    public void setVisualization(int v){
+        
+        
+        switch(currentVisualization){
+            
+            case SECUENCIAL:
+                
+                simpleU.getLocale().replaceBranchGraph(secuencialVisualization, visualizationArray.get(v));
+                
+                currentVisualization = v;
+                
+                break;
+            
+            case SPIRAL:
+                
+                
+                simpleU.getLocale().replaceBranchGraph(spiralVisualization, visualizationArray.get(v));
+                
+                currentVisualization = v;   
+                
+                
+        }/*
+        
+        if(v == 0){
+            simpleU.getLocale().replaceBranchGraph(spiralVisualization, secuencialVisualization);
+
+        }
+        
+        else if(v==1){
+            simpleU.getLocale().replaceBranchGraph(secuencialVisualization, spiralVisualization);
+
+
+        }*/
+        
+        
+        /*
+        
+        System.out.println("Current visualization: " + currentVisualization);
+        switch(currentVisualization){
+            
+            case SECUENCIAL:
+                               
+                simpleU.getLocale().replaceBranchGraph(secuencialVisualization, spiralVisualization);
+
+                currentVisualization = 0;
+
+                System.out.println("WFQFW");
+                break;
+                
+            case SPIRAL:
+
+                simpleU.getLocale().replaceBranchGraph(spiralVisualization, secuencialVisualization);
+                
+                currentVisualization = 1;
+                     System.out.println("sadadas");
+                break;
+        
+        }*/
+     
+    }
+        
+    
+    
     public JPanelCanvas3D() {
+        
         x = y = 1f;
+        
         
         setLayout(new BorderLayout());
         GraphicsConfiguration config =
            SimpleUniverse.getPreferredConfiguration();
 
+        initializeVisualizations();
+        
         canvas3D = new Canvas3D(config);
         add("Center", canvas3D);
 
-        BranchGroup scene = createSceneGraph();
-	scene.compile();
 
-        // SimpleUniverse is a Convenience Utility class
-        SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
-
-	// This will move the ViewPlatform back a bit so the
-	// objects in the scene can be viewed.
+        simpleU = new SimpleUniverse(canvas3D);
         
         this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
         
         simpleU.getViewingPlatform().setNominalViewingTransform();
 
-        //Axis axis = new Axis();
+        simpleU.addBranchGraph(spiralVisualization);
         
-        simpleU.addBranchGraph(scene);
+        
+        mouseBehaviour();
+        
+      //  simpleU.addBranchGraph(createSceneGraph(currentVisualization));
+                
+        
+        
+      // simpleU.getLocale().replaceBranchGraph(l, scene);
+       // scene.detach();
+        
+       // simpleU.addBranchGraph(scene);
+
+        //https://community.oracle.com/thread/1276756?start=0&tstart=0
+        
+        
+        //simpleU.addBranchGraph(scene2);
+
         //simpleU.addBranchGraph(axis.ejes());
 
         

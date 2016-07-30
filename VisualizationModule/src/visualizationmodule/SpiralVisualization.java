@@ -5,14 +5,8 @@
  */
 package visualizationmodule;
 
-import com.sun.j3d.utils.geometry.Box;
-import com.sun.j3d.utils.geometry.Primitive;
-import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Texture;
-import javax.media.j3d.TextureAttributes;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
 
 /**
@@ -34,7 +28,7 @@ public class SpiralVisualization extends AbstractVisualization {
     public SpiralVisualization(int num){
         
         super(num);
-        this.type = SPIRAL;
+        this.TYPE = AbstractVisualization.SPIRAL;
         
     }
     

@@ -5,14 +5,8 @@
  */
 package visualizationmodule;
 
-import com.sun.j3d.utils.geometry.Box;
-import com.sun.j3d.utils.geometry.Primitive;
-import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Texture;
-import javax.media.j3d.TextureAttributes;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
 
 
@@ -25,8 +19,8 @@ public class SecuencialVisualization extends AbstractVisualization{
     public SecuencialVisualization(int num){
         
         super(num);
-        this.type = SECUENCIAL;
-        
+        this.TYPE = SecuencialVisualization.SECUENCIAL;
+    
     }
     
     
@@ -49,8 +43,6 @@ public class SecuencialVisualization extends AbstractVisualization{
         drawImage(ci.getImages().get(0),rightVector,0);
         
         for(int i = 1; i < this.imagesNumber; i++){
-            
-            System.out.println(ci.getWeights().get(i));
             
             if(ci.getWeights().get(i) >= 0.5f){
                 rightVector.x += 1.5;

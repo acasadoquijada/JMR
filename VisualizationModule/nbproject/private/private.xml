@@ -3,7 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/alejandro/Desktop/VisualizationModule/src/visualizationmodule/MiFrame.java</file>
+            <file>file:/C:/Users/alejandro/Desktop/VisualizationModule/src/visualizationmodule/SecuencialVisualization.java</file>
+            <file>file:/C:/Users/alejandro/Desktop/VisualizationModule/src/visualizationmodule/AbstractVisualization.java</file>
             <file>file:/C:/Users/alejandro/Desktop/VisualizationModule/src/visualizationmodule/SpiralVisualization.java</file>
             <file>file:/C:/Users/alejandro/Desktop/VisualizationModule/src/visualizationmodule/JPanelCanvas3D.java</file>
         </group>
