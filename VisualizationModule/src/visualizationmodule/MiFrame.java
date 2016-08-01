@@ -12,6 +12,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 /**
@@ -27,7 +28,7 @@ public class MiFrame extends JFrame {
     private JMenu jmenuVisualizacion;
     private JCheckBoxMenuItem jCheckBoxSecuencial ;
     private JCheckBoxMenuItem jCheckBoxSpiral;
-    
+    private JMenuItem jMenuItemResetPosition;
     private JPanelCanvas3D hj3d;
     
     public MiFrame() {
@@ -70,6 +71,7 @@ public class MiFrame extends JFrame {
         jmenuVisualizacion = new javax.swing.JMenu();
         jCheckBoxSecuencial = new javax.swing.JCheckBoxMenuItem();
         jCheckBoxSpiral = new javax.swing.JCheckBoxMenuItem();
+        jMenuItemResetPosition = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(500, 500));
@@ -87,13 +89,14 @@ public class MiFrame extends JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
-        jMenu1.setText("File");
+        jMenu1.setText("Options");
         jMenuBar1.add(jMenu1);
 
         jmenuVisualizacion.setText("Visualization");
 
         jCheckBoxSecuencial.setText("Secuencial");
         jmenuVisualizacion.add(jCheckBoxSecuencial);
+       
         
         this.jCheckBoxSecuencial.addActionListener(new java.awt.event.ActionListener() {
        
@@ -115,6 +118,16 @@ public class MiFrame extends JFrame {
                 jCheckBoxSpiralActionPerformed(evt);
             }
         });
+        
+        jMenuItemResetPosition.setText("Reset position");
+        
+        jMenuItemResetPosition.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemResetPositionActionPerformed(evt);
+            }
+        });
+        
+        jMenu1.add(jMenuItemResetPosition);
 
 
 
@@ -141,6 +154,12 @@ public class MiFrame extends JFrame {
         }
         
          hj3d.setVisualization(1);
+        
+    }
+    
+    private void jMenuItemResetPositionActionPerformed(java.awt.event.ActionEvent evt){
+      
+        hj3d.resetCameraPosition();
         
     }
 

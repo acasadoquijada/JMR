@@ -10,7 +10,6 @@ package visualizationmodule;
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.media.j3d.*;
@@ -27,6 +26,7 @@ public class JPanelCanvas3D extends JPanel {
     private SimpleUniverse simpleU;
     
     private TransformGroup camara;
+    private Transform3D defaultCamera;
     
     private Canvas3D canvas3D;
     
@@ -111,6 +111,16 @@ public class JPanelCanvas3D extends JPanel {
         }
      
     }
+    
+    public void resetCameraPosition(){
+        
+        this.simpleU.getViewingPlatform().setNominalViewingTransform();
+
+        this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
+
+        this.vcamara.z = 2.414213562373095;
+        
+    }
         
     
     
@@ -133,6 +143,9 @@ public class JPanelCanvas3D extends JPanel {
         
         this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
         
+        this.defaultCamera = new Transform3D();
+        this.camara.getTransform(this.defaultCamera);
+
         simpleU.getViewingPlatform().setNominalViewingTransform();
 
         simpleU.addBranchGraph(spiralVisualization);
@@ -204,6 +217,7 @@ public class JPanelCanvas3D extends JPanel {
             //Making it the same as used
             camara.getTransform(tcamara);
             tcamara.get(vcamara);
+          
         }
         
         
@@ -215,6 +229,7 @@ public class JPanelCanvas3D extends JPanel {
         double truncatedVcamaraZ = (int)(vcamara.z * 100) / 100.0;
 
         
+        
         if(rotation > 0 && truncatedVcamaraZ != zoomLimitMin){
 
             vcamara.z -= JPanelCanvas3D.MOVESPEED;
@@ -225,6 +240,7 @@ public class JPanelCanvas3D extends JPanel {
             vcamara.z += JPanelCanvas3D.MOVESPEED;
         
         }
+
 
         tcamara.set(vcamara);
 
@@ -242,6 +258,7 @@ public class JPanelCanvas3D extends JPanel {
             //Making it the same as used
             camara.getTransform(tcamara);
             tcamara.get(vcamara);
+         
             }
  
         //Increasing or decreasing the x value of the Vector3d
