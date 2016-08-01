@@ -10,9 +10,9 @@ package visualizationmodule;
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.media.j3d.*;
 import javax.swing.JPanel;
 import javax.vecmath.Color3f;
@@ -29,8 +29,6 @@ public class JPanelCanvas3D extends JPanel {
     private TransformGroup camara;
     
     private Canvas3D canvas3D;
-
-    private float x,y;
     
     private Transform3D tcamara;
     private Vector3d vcamara;
@@ -108,44 +106,9 @@ public class JPanelCanvas3D extends JPanel {
                 
                 currentVisualization = v;   
                 
+                break;
                 
-        }/*
-        
-        if(v == 0){
-            simpleU.getLocale().replaceBranchGraph(spiralVisualization, secuencialVisualization);
-
         }
-        
-        else if(v==1){
-            simpleU.getLocale().replaceBranchGraph(secuencialVisualization, spiralVisualization);
-
-
-        }*/
-        
-        
-        /*
-        
-        System.out.println("Current visualization: " + currentVisualization);
-        switch(currentVisualization){
-            
-            case SECUENCIAL:
-                               
-                simpleU.getLocale().replaceBranchGraph(secuencialVisualization, spiralVisualization);
-
-                currentVisualization = 0;
-
-                System.out.println("WFQFW");
-                break;
-                
-            case SPIRAL:
-
-                simpleU.getLocale().replaceBranchGraph(spiralVisualization, secuencialVisualization);
-                
-                currentVisualization = 1;
-                     System.out.println("sadadas");
-                break;
-        
-        }*/
      
     }
         
@@ -153,7 +116,7 @@ public class JPanelCanvas3D extends JPanel {
     
     public JPanelCanvas3D() {
         
-        x = y = 1f;
+       // x = y = 1f;
         
         
         setLayout(new BorderLayout());
@@ -243,16 +206,25 @@ public class JPanelCanvas3D extends JPanel {
             tcamara.get(vcamara);
         }
         
-        int rotacion = evt.getWheelRotation();
         
-        if(rotacion > 0){
+        int rotation = evt.getWheelRotation();
+        
+        double zoomLimitMin = 0.91;
+        double zoomLimitMax = 31.91;
+        
+        double truncatedVcamaraZ = (int)(vcamara.z * 100) / 100.0;
+
+        
+        if(rotation > 0 && truncatedVcamaraZ != zoomLimitMin){
+
             vcamara.z -= JPanelCanvas3D.MOVESPEED;
+
         }
         
-        else{
+        if(rotation < 0 && truncatedVcamaraZ != zoomLimitMax){
             vcamara.z += JPanelCanvas3D.MOVESPEED;
-        }
         
+        }
 
         tcamara.set(vcamara);
 

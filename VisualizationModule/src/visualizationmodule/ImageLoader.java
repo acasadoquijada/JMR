@@ -8,7 +8,6 @@ package visualizationmodule;
 import com.sun.j3d.utils.image.TextureLoader;
 import java.awt.Container;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import javax.media.j3d.Texture;
 
