@@ -10,7 +10,6 @@ package visualizationmodule;
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.swing.JPanel;
@@ -26,7 +25,6 @@ public class JPanelCanvas3D extends JPanel {
     private SimpleUniverse simpleU;
     
     private TransformGroup camara;
-    private Transform3D defaultCamera;
     
     private Canvas3D canvas3D;
     
@@ -143,8 +141,6 @@ public class JPanelCanvas3D extends JPanel {
         
         this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
         
-        this.defaultCamera = new Transform3D();
-        this.camara.getTransform(this.defaultCamera);
 
         simpleU.getViewingPlatform().setNominalViewingTransform();
 
