@@ -10,6 +10,7 @@ package visualizationmodule;
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.swing.JPanel;
@@ -37,12 +38,20 @@ public class JPanelCanvas3D extends JPanel {
     private int lastX = 0;
     private int lastY = 0;
     
+    private Point point;
+    
+    private Point initialPoint;
+    
+    private final double zoomLimitMin = 0.91;
+    private final double zoomLimitMax = 31.91;
+    private final double defaultZoom = 2.414213562373095 ;
+    
     public BranchGroup spiralVisualization;
     public BranchGroup secuencialVisualization;
  
     private ArrayList <BranchGroup> visualizationArray;
     
-    public int currentVisualization = 1;
+    public int currentVisualization;
     
     public static final int SECUENCIAL = 0;
 
@@ -99,12 +108,12 @@ public class JPanelCanvas3D extends JPanel {
             
             case SPIRAL:
                 
-                
                 simpleU.getLocale().replaceBranchGraph(spiralVisualization, visualizationArray.get(v));
                 
                 currentVisualization = v;   
                 
                 break;
+                
                 
         }
      
@@ -116,16 +125,13 @@ public class JPanelCanvas3D extends JPanel {
 
         this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
 
-        this.vcamara.z = 2.414213562373095;
+        this.vcamara.z = this.defaultZoom;
         
     }
         
     
     
     public JPanelCanvas3D() {
-        
-       // x = y = 1f;
-        
         
         setLayout(new BorderLayout());
         GraphicsConfiguration config =
@@ -135,46 +141,21 @@ public class JPanelCanvas3D extends JPanel {
         
         canvas3D = new Canvas3D(config);
         add("Center", canvas3D);
-
-
+        
         simpleU = new SimpleUniverse(canvas3D);
         
         this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
         
-
         simpleU.getViewingPlatform().setNominalViewingTransform();
 
+        currentVisualization = 1;
+        
         simpleU.addBranchGraph(spiralVisualization);
         
         
         mouseBehaviour();
-        
-      //  simpleU.addBranchGraph(createSceneGraph(currentVisualization));
-                
-        
-        
-      // simpleU.getLocale().replaceBranchGraph(l, scene);
-       // scene.detach();
-        
-       // simpleU.addBranchGraph(scene);
 
-        //https://community.oracle.com/thread/1276756?start=0&tstart=0
-        
-        
-        //simpleU.addBranchGraph(scene2);
-
-        //simpleU.addBranchGraph(axis.ejes());
-
-        
-//        canvas3D.addKeyListener(this);
-        //mouseListener();
-        
-        //MouseListenerCanvas3D ir = new MouseListenerCanvas3D();
-        
-        //canvas3D.addMouseListener(ir);
     }
-
-    //
 
     private void mouseBehaviour(){
         
@@ -184,6 +165,12 @@ public class JPanelCanvas3D extends JPanel {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 formMousePressed(evt);
             }
+            
+                        
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                formMouseReleased(evt);
+            }
         });
         
         this.canvas3D.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -191,7 +178,10 @@ public class JPanelCanvas3D extends JPanel {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 formMouseDragged(evt);
             }
+           
+
         });
+        
         
         
         this.canvas3D.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -203,11 +193,18 @@ public class JPanelCanvas3D extends JPanel {
     }
     
     private void formMousePressed(java.awt.event.MouseEvent evt){
+        
+        point = new Point();
+        
+        initialPoint = new Point();
+        
+        initialPoint = evt.getPoint();
      
     }
     
-    private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {                                     
-        if(this.tcamara == null){
+    private void formMouseReleased(java.awt.event.MouseEvent evt){
+        
+     /*   if(this.tcamara == null){
             this.vcamara    = new Vector3d();
             this.tcamara    = new Transform3D();
             //Making it the same as used
@@ -217,33 +214,20 @@ public class JPanelCanvas3D extends JPanel {
         }
         
         
-        int rotation = evt.getWheelRotation();
-        
-        double zoomLimitMin = 0.91;
-        double zoomLimitMax = 31.91;
-        
-        double truncatedVcamaraZ = (int)(vcamara.z * 100) / 100.0;
-
-        
-        
-        if(rotation > 0 && truncatedVcamaraZ != zoomLimitMin){
-
-            vcamara.z -= JPanelCanvas3D.MOVESPEED;
-
-        }
-        
-        if(rotation < 0 && truncatedVcamaraZ != zoomLimitMax){
-            vcamara.z += JPanelCanvas3D.MOVESPEED;
-        
-        }
-
-
+         vcamara.x   += ( evt.getX() - initialPoint.getX()) * JPanelCanvas3D.TURNSPEED;
+        // this.lastY  =   evt.getY();
         tcamara.set(vcamara);
-
         camara.setTransform(tcamara);
+        
+        
+        point = evt.getPoint();*/
+        
+        
     }
+
     
     private void formMouseDragged(java.awt.event.MouseEvent evt){
+
         
         if(this.tcamara == null){
  
@@ -258,15 +242,47 @@ public class JPanelCanvas3D extends JPanel {
             }
  
         //Increasing or decreasing the x value of the Vector3d
-        vcamara.x   += ( evt.getX() - this.lastX) * JPanelCanvas3D.TURNSPEED;
-        this.lastX  =   evt.getX();
+        vcamara.x   += ( evt.getX() - initialPoint.getX()) * JPanelCanvas3D.TURNSPEED ;
         
-        vcamara.y   += ( evt.getY() - this.lastY) * JPanelCanvas3D.TURNSPEED;
-        this.lastY  =   evt.getY();
+        vcamara.y   += ( evt.getY() - initialPoint.getY()) * JPanelCanvas3D.TURNSPEED ;
+        
+        
+        initialPoint =   evt.getPoint();
+        
         tcamara.set(vcamara);
         camara.setTransform(tcamara);
         
 	}
+    
+        
+    private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {                                     
+        if(this.tcamara == null){
+            this.vcamara    = new Vector3d();
+            this.tcamara    = new Transform3D();
+            //Making it the same as used
+            camara.getTransform(tcamara);
+            tcamara.get(vcamara);
+          
+        }
+        
+        
+        int rotation = evt.getWheelRotation();
+
+        double truncatedVcamaraZ = (int)(vcamara.z * 100) / 100.0;
+   
+        if(rotation > 0 && truncatedVcamaraZ != zoomLimitMin){
+
+            vcamara.z -= JPanelCanvas3D.MOVESPEED;
+        }
+        
+        if(rotation < 0 && truncatedVcamaraZ != zoomLimitMax){
+            vcamara.z += JPanelCanvas3D.MOVESPEED;     
+        }
+
+        tcamara.set(vcamara);
+
+        camara.setTransform(tcamara);
+    }
     // Parte de eventos
    
 } // end of class JPanelCanvas3D
