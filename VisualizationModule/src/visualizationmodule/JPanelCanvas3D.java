@@ -32,7 +32,7 @@ public class JPanelCanvas3D extends JPanel {
     private Transform3D tcamara;
     private Vector3d vcamara;
     
-    private static final double TURNSPEED = 0.005;
+    private static final double TURNSPEED = 0.01;
     private static final double MOVESPEED  = 0.5;
     
     private int lastX = 0;
@@ -125,6 +125,7 @@ public class JPanelCanvas3D extends JPanel {
 
         this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
 
+        this.vcamara = new Vector3d();
         this.vcamara.z = this.defaultZoom;
         
     }
@@ -138,6 +139,10 @@ public class JPanelCanvas3D extends JPanel {
            SimpleUniverse.getPreferredConfiguration();
 
         initializeVisualizations();
+        
+        this.vcamara    = new Vector3d();
+        this.tcamara    = new Transform3D();
+        
         
         canvas3D = new Canvas3D(config);
         add("Center", canvas3D);
@@ -166,11 +171,6 @@ public class JPanelCanvas3D extends JPanel {
                 formMousePressed(evt);
             }
             
-                        
-            @Override
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                formMouseReleased(evt);
-            }
         });
         
         this.canvas3D.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -182,15 +182,61 @@ public class JPanelCanvas3D extends JPanel {
 
         });
         
-        
-        
         this.canvas3D.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             @Override
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
                 formMouseWheelMoved(evt);
             }
         });
+       
+        this.canvas3D.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
+        
+        
+        
     }
+    
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {                                
+
+        camara.getTransform(tcamara);
+        tcamara.get(vcamara);  
+        
+        char key = evt.getKeyChar();
+        
+        switch(key){
+            
+            case 'w':
+                
+                vcamara.y += JPanelCanvas3D.MOVESPEED/2;
+                                
+                break;
+                
+            case 's':
+                
+                vcamara.y -= JPanelCanvas3D.MOVESPEED/2;
+                break;
+ 
+            case 'a':
+                
+                vcamara.x -= JPanelCanvas3D.MOVESPEED/2;
+                break;
+                
+            case 'd':
+                
+                vcamara.x += JPanelCanvas3D.MOVESPEED/2;
+                break;
+        }
+        
+        
+        tcamara.set(vcamara);
+        camara.setTransform(tcamara);
+        
+        
+    } 
     
     private void formMousePressed(java.awt.event.MouseEvent evt){
         
@@ -202,52 +248,20 @@ public class JPanelCanvas3D extends JPanel {
      
     }
     
-    private void formMouseReleased(java.awt.event.MouseEvent evt){
-        
-     /*   if(this.tcamara == null){
-            this.vcamara    = new Vector3d();
-            this.tcamara    = new Transform3D();
-            //Making it the same as used
-            camara.getTransform(tcamara);
-            tcamara.get(vcamara);
-          
-        }
-        
-        
-         vcamara.x   += ( evt.getX() - initialPoint.getX()) * JPanelCanvas3D.TURNSPEED;
-        // this.lastY  =   evt.getY();
-        tcamara.set(vcamara);
-        camara.setTransform(tcamara);
-        
-        
-        point = evt.getPoint();*/
-        
-        
-    }
 
     
     private void formMouseDragged(java.awt.event.MouseEvent evt){
 
-        
-        if(this.tcamara == null){
- 
-            //Creating the object we need
-            this.tcamara = new Transform3D();
-            this.vcamara    = new Vector3d();
 
-            //Making it the same as used
-            camara.getTransform(tcamara);
-            tcamara.get(vcamara);
-         
-            }
- 
-        //Increasing or decreasing the x value of the Vector3d
+        camara.getTransform(tcamara);
+        tcamara.get(vcamara);
+
         vcamara.x   += ( evt.getX() - initialPoint.getX()) * JPanelCanvas3D.TURNSPEED ;
         
         vcamara.y   += ( evt.getY() - initialPoint.getY()) * JPanelCanvas3D.TURNSPEED ;
         
         
-        initialPoint =   evt.getPoint();
+        initialPoint =  evt.getPoint();
         
         tcamara.set(vcamara);
         camara.setTransform(tcamara);
@@ -256,14 +270,10 @@ public class JPanelCanvas3D extends JPanel {
     
         
     private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {                                     
-        if(this.tcamara == null){
-            this.vcamara    = new Vector3d();
-            this.tcamara    = new Transform3D();
-            //Making it the same as used
-            camara.getTransform(tcamara);
-            tcamara.get(vcamara);
-          
-        }
+
+        camara.getTransform(tcamara);
+        tcamara.get(vcamara);
+
         
         
         int rotation = evt.getWheelRotation();
