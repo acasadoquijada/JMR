@@ -43,18 +43,21 @@ public class SecuencialVisualization extends AbstractVisualization{
         
         drawImage(ci.getImages().get(0),rightVector,0);
         
+        
         for(int i = 1; i < this.imagesNumber; i++){
             
-            if(ci.getWeights().get(i) >= 0.5f){
+            if(i%2 != 0){
                 rightVector.x += 1.5;
-                drawImage(ci.getImages().get(i),rightVector,i);
+                drawImage(ci.getImages().get(i),rightVector,i);    
                 
             }
             
             else{
                 leftVector.x += -1.5;
                 drawImage(ci.getImages().get(i),leftVector,i);
-            } 
+      
+            }
+            
         }
         
         return this.objRoot;
