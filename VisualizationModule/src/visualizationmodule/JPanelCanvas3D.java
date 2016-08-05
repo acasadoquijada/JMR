@@ -7,6 +7,10 @@ package visualizationmodule;
  * @author Alejandro
  *
  */
+import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
+import com.sun.j3d.utils.geometry.Primitive;
+import com.sun.j3d.utils.pickfast.PickCanvas;
+import com.sun.j3d.utils.picking.PickResult;
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
@@ -35,9 +39,6 @@ public class JPanelCanvas3D extends JPanel {
     private static final double TURNSPEED = 0.01;
     private static final double MOVESPEED  = 0.5;
     
-    private int lastX = 0;
-    private int lastY = 0;
-    
     private Point point;
     
     private Point initialPoint;
@@ -45,6 +46,9 @@ public class JPanelCanvas3D extends JPanel {
     private final double zoomLimitMin = 0.91;
     private final double zoomLimitMax = 31.91;
     private final double defaultZoom = 2.414213562373095 ;
+    
+    
+    private PickCanvas pickCanvas; 
     
     public BranchGroup spiralVisualization;
     public BranchGroup secuencialVisualization;
@@ -149,46 +153,44 @@ public class JPanelCanvas3D extends JPanel {
         
         simpleU = new SimpleUniverse(canvas3D);
         
-        this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
+        //this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
         
-        simpleU.getViewingPlatform().setNominalViewingTransform();
+        //simpleU.getViewingPlatform().setNominalViewingTransform();
 
         currentVisualization = 1;
         
+        //simpleU.addBranchGraph(spiralVisualization);
+        
+        
+       OrbitBehavior m_orbit = new OrbitBehavior(canvas3D, 
+        OrbitBehavior.REVERSE_ALL | OrbitBehavior.STOP_ZOOM);
+       
+       
+        BoundingSphere bounds =
+        new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 200.0);
+  
+        m_orbit.setSchedulingBounds(bounds);
+        m_orbit.setZoomFactor(-1d);
+        this.simpleU.getViewingPlatform().setViewPlatformBehavior(m_orbit);
+        this.camara = this.simpleU.getViewingPlatform().getViewPlatformTransform();
+        
         simpleU.addBranchGraph(spiralVisualization);
-        
-        
-        mouseBehaviour();
+       
+       
+       
+       
+       
+       
+       
+       
+       
+     mouseBehaviour();
 
     }
 
     private void mouseBehaviour(){
         
         
-        this.canvas3D.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                formMousePressed(evt);
-            }
-            
-        });
-        
-        this.canvas3D.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                formMouseDragged(evt);
-            }
-           
-
-        });
-        
-        this.canvas3D.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                formMouseWheelMoved(evt);
-            }
-        });
-       
         this.canvas3D.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -237,62 +239,7 @@ public class JPanelCanvas3D extends JPanel {
         
         
     } 
-    
-    private void formMousePressed(java.awt.event.MouseEvent evt){
-        
-        point = new Point();
-        
-        initialPoint = new Point();
-        
-        initialPoint = evt.getPoint();
-     
-    }
-    
 
-    
-    private void formMouseDragged(java.awt.event.MouseEvent evt){
-
-
-        camara.getTransform(tcamara);
-        tcamara.get(vcamara);
-
-        vcamara.x   += ( evt.getX() - initialPoint.getX()) * JPanelCanvas3D.TURNSPEED ;
-        
-        vcamara.y   += ( evt.getY() - initialPoint.getY()) * JPanelCanvas3D.TURNSPEED ;
-        
-        
-        initialPoint =  evt.getPoint();
-        
-        tcamara.set(vcamara);
-        camara.setTransform(tcamara);
-        
-	}
-    
-        
-    private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {                                     
-
-        camara.getTransform(tcamara);
-        tcamara.get(vcamara);
-
-        
-        
-        int rotation = evt.getWheelRotation();
-
-        double truncatedVcamaraZ = (int)(vcamara.z * 100) / 100.0;
-   
-        if(rotation > 0 && truncatedVcamaraZ != zoomLimitMin){
-
-            vcamara.z -= JPanelCanvas3D.MOVESPEED;
-        }
-        
-        if(rotation < 0 && truncatedVcamaraZ != zoomLimitMax){
-            vcamara.z += JPanelCanvas3D.MOVESPEED;     
-        }
-
-        tcamara.set(vcamara);
-
-        camara.setTransform(tcamara);
-    }
     // Parte de eventos
    
 } // end of class JPanelCanvas3D

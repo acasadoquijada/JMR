@@ -5,8 +5,10 @@
  */
 package visualizationmodule;
 
+import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Texture;
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 
 /**
@@ -30,6 +32,7 @@ public class SpiralVisualization extends AbstractVisualization {
         super(num);
         this.TYPE = AbstractVisualization.SPIRAL;
         
+
     }
     
     

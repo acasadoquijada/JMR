@@ -7,13 +7,20 @@ package visualizationmodule;
 
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Primitive;
+import com.sun.j3d.utils.geometry.Sphere;
 import java.util.ArrayList;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.LineArray;
+import javax.media.j3d.LineAttributes;
+import javax.media.j3d.PointAttributes;
+import javax.media.j3d.PolygonAttributes;
+import javax.media.j3d.Shape3D;
 import javax.media.j3d.Texture;
 import javax.media.j3d.TextureAttributes;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 /**
@@ -44,7 +51,7 @@ public abstract class AbstractVisualization {
         this.initializeTransformsGroup(imagesNumber);
         this.initializeTransforms3D(imagesNumber);
         this.ci = new ImageLoader(imagesNumber);
-
+        
     }
     
     protected void initializeTransforms3D(int imagesNumber){
@@ -69,6 +76,7 @@ public abstract class AbstractVisualization {
     
     }
     abstract BranchGroup createScene();
+    
     protected void drawImage(Texture tex, Vector3f pos, int index){
         
         Transform3D trans = this.transforms.get(index);
@@ -86,7 +94,15 @@ public abstract class AbstractVisualization {
 
         ap.setTexture(tex);
 
-        ap.setTextureAttributes(texAttr);    
+        ap.setTextureAttributes(texAttr);   
+        
+        PointAttributes pa = new PointAttributes();
+        pa.setPointAntialiasingEnable(true);
+        LineAttributes la=new LineAttributes();
+
+        la.setLineAntialiasingEnable(true);
+        ap.setLineAttributes(la);     
+        ap.setPointAttributes(pa);
         
         int primflags = Primitive.GENERATE_NORMALS +
 
@@ -103,7 +119,10 @@ public abstract class AbstractVisualization {
         }
 
     
-        Box b = new Box(tam,tam,0f,primflags,ap);
+        Box b = new Box(tam,tam,tam,primflags,ap);
+    
+       // Sphere b = new Sphere(tam,primflags,64,ap);
+        
         
         trans.setTranslation(pos);
        
@@ -116,5 +135,10 @@ public abstract class AbstractVisualization {
         this.objRoot.addChild(tg);   
         
     };
+    
+    protected void pick(){
+        
+    }
+    
     
 }

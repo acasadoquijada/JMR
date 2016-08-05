@@ -19,6 +19,7 @@ public class SecuencialVisualization extends AbstractVisualization{
     public SecuencialVisualization(int num){
         
         super(num);
+
         this.TYPE = SecuencialVisualization.SECUENCIAL;
     
     }
