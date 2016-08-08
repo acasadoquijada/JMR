@@ -5,10 +5,8 @@
  */
 package visualizationmodule;
 
-import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Texture;
-import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 
 /**
@@ -25,28 +23,16 @@ public class SpiralVisualization extends AbstractVisualization {
 
     
     private Vector3f vector;
-    private int order;
+    
+    private final float Zdecrement = 0.025f;
     
     public SpiralVisualization(int num){
         
         super(num);
         this.TYPE = AbstractVisualization.SPIRAL;
-        
+       
 
     }
-    
-    
-    @Override
-    public void initializeTransforms3D(int imagesNumber) {
-        super.initializeTransforms3D(imagesNumber);
-    }
-
-    @Override
-    public void initializeTransformsGroup(int imagesNumber) {
-        super.initializeTransformsGroup(imagesNumber);
-    }
-    
-    
     
     @Override
     public BranchGroup createScene() {
@@ -79,6 +65,7 @@ public class SpiralVisualization extends AbstractVisualization {
                 
                 else{
                     this.vector.x +=1.1;
+                    this.vector.z -=Zdecrement;
                     drawImage(ci.getImages().get(image),this.vector,image);
 
                 }
@@ -96,6 +83,7 @@ public class SpiralVisualization extends AbstractVisualization {
             while(i <=maxLoop2 && cont){
                 
                 this.vector.y -= 1.1;
+                this.vector.z -=Zdecrement;
                 drawImage(ci.getImages().get(image),this.vector,image);
                 
                 image++;
@@ -112,6 +100,7 @@ public class SpiralVisualization extends AbstractVisualization {
             while(i <= maxLoop3 && cont){
                 
                 this.vector.x -= 1.1;
+                this.vector.z -=Zdecrement;
                 drawImage(ci.getImages().get(image),this.vector,image);
                 
                 image++;
@@ -127,6 +116,7 @@ public class SpiralVisualization extends AbstractVisualization {
             while(i <= maxLoop4 && cont){
                 
                 this.vector.y += 1.1;
+                this.vector.z -=Zdecrement;
                 drawImage(ci.getImages().get(image),this.vector,image);
                 
                 image++;
@@ -155,12 +145,4 @@ public class SpiralVisualization extends AbstractVisualization {
 
     }
 
-
-    @Override
-    public void drawImage(Texture tex, Vector3f pos, int index) {
-           
-        super.drawImage(tex, pos, index);        
-    
-    }
-    
 }

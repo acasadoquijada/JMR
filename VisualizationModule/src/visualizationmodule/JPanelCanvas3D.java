@@ -7,19 +7,21 @@ package visualizationmodule;
  * @author Alejandro
  *
  */
+import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
+import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
+import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
 import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
-import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.pickfast.PickCanvas;
-import com.sun.j3d.utils.picking.PickResult;
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
-import java.awt.Point;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.swing.JPanel;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
 
@@ -36,23 +38,18 @@ public class JPanelCanvas3D extends JPanel {
     private Transform3D tcamara;
     private Vector3d vcamara;
     
-    private static final double TURNSPEED = 0.01;
     private static final double MOVESPEED  = 0.5;
     
-    private Point point;
+   // private final double defaultZoom = 2.414213562373095 ;
     
-    private Point initialPoint;
-    
-    private final double zoomLimitMin = 0.91;
-    private final double zoomLimitMax = 31.91;
-    private final double defaultZoom = 2.414213562373095 ;
-    
+    private final double defaultZoom = 3.65418546;
     
     private PickCanvas pickCanvas; 
     
     public BranchGroup spiralVisualization;
     public BranchGroup secuencialVisualization;
- 
+    public BranchGroup roadVisualization;
+    
     private ArrayList <BranchGroup> visualizationArray;
     
     public int currentVisualization;
@@ -60,6 +57,8 @@ public class JPanelCanvas3D extends JPanel {
     public static final int SECUENCIAL = 0;
 
     public static final int SPIRAL = 1;
+    
+    public static final int ROAD = 2;
     
 
     private void initializeVisualizations(){
@@ -69,10 +68,7 @@ public class JPanelCanvas3D extends JPanel {
         
         secuencialVisualization = sv.createScene();
         secuencialVisualization.setCapability(BranchGroup.ALLOW_DETACH);
-
-        
-        createBackground(secuencialVisualization);
-        
+ 
         
         // Spiral visualization
         SpiralVisualization vs = new SpiralVisualization(75);
@@ -80,22 +76,30 @@ public class JPanelCanvas3D extends JPanel {
         spiralVisualization = vs.createScene();
         spiralVisualization.setCapability(BranchGroup.ALLOW_DETACH);
 
-        createBackground(spiralVisualization);
         
+        // Road visualization
+        RoadVisualization rv = new RoadVisualization(9);
+        
+        roadVisualization = rv.createScene();
+        roadVisualization.setCapability(BranchGroup.ALLOW_DETACH);
+        roadVisualization.setCapability(TransformGroup.ENABLE_PICK_REPORTING); 
+        roadVisualization.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        roadVisualization.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE); 
+
+        
+        // Visualization array
         visualizationArray = new ArrayList<>();
                 
         visualizationArray.add(secuencialVisualization);
         visualizationArray.add(spiralVisualization);
+        visualizationArray.add(roadVisualization);
+        
+        
+        
   
         
     }
 
-    private void createBackground(BranchGroup bg){
-        Background background = new Background(new Color3f(1.000f, 0.980f, 0.980f));
-        BoundingSphere sphere = new BoundingSphere(new Point3d(0,0,0), 100000);
-        background.setApplicationBounds(sphere);
-        bg.addChild(background);
-    }
     
     public void setVisualization(int v){
         
@@ -127,10 +131,10 @@ public class JPanelCanvas3D extends JPanel {
         
         this.simpleU.getViewingPlatform().setNominalViewingTransform();
 
-        this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
+///        this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
 
-        this.vcamara = new Vector3d();
-        this.vcamara.z = this.defaultZoom;
+      //  this.vcamara = new Vector3d();
+       // this.vcamara.z = this.defaultZoom;
         
     }
         
@@ -157,34 +161,59 @@ public class JPanelCanvas3D extends JPanel {
         
         //simpleU.getViewingPlatform().setNominalViewingTransform();
 
-        currentVisualization = 1;
+        currentVisualization = SPIRAL;
         
         //simpleU.addBranchGraph(spiralVisualization);
         
+        //
         
-       OrbitBehavior m_orbit = new OrbitBehavior(canvas3D, 
-        OrbitBehavior.REVERSE_ALL | OrbitBehavior.STOP_ZOOM);
-       
-       
-        BoundingSphere bounds =
+        
+        
+        
+        
+        
+        
+        //
+            BoundingSphere bounds =
         new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 200.0);
-  
+     
+      OrbitBehavior m_orbit = new OrbitBehavior(canvas3D, 
+        OrbitBehavior.REVERSE_ALL);
+       
+       
+ 
         m_orbit.setSchedulingBounds(bounds);
         m_orbit.setZoomFactor(-1d);
         this.simpleU.getViewingPlatform().setViewPlatformBehavior(m_orbit);
-        this.camara = this.simpleU.getViewingPlatform().getViewPlatformTransform();
+        
+        resetCameraPosition();
+    //    PickRotateBehavior behavior = new PickRotateBehavior(roadVisualization, canvas3D, bounds);
+       // roadVisualization.addChild(behavior);
+
+       // this.camara = this.simpleU.getViewingPlatform().get;
+        
+
+        
+        
+        
+      
+    /*    MouseRotate behavior1 = new MouseRotate(canvas3D); 
+        roadVisualization.addChild(behavior1); 
+        behavior1.setSchedulingBounds(bounds); 
+ 
+        // Create the zoom behavior node 
+        MouseZoom behavior2 = new MouseZoom(canvas3D); 
+        roadVisualization.addChild(behavior2); 
+        behavior2.setSchedulingBounds(bounds); 
+ 
+        // Create the translate behavior node 
+        MouseTranslate behavior3 = new MouseTranslate(canvas3D); 
+        roadVisualization.addChild(behavior3); 
+        behavior3.setSchedulingBounds(bounds); */
+        
+  
         
         simpleU.addBranchGraph(spiralVisualization);
-       
-       
-       
-       
-       
-       
-       
-       
-       
-     mouseBehaviour();
 
     }
 

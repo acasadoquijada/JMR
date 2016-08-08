@@ -24,17 +24,6 @@ public class SecuencialVisualization extends AbstractVisualization{
     
     }
     
-    
-    @Override
-    public void initializeTransforms3D(int imagesNumber) {
-        super.initializeTransforms3D(imagesNumber);
-    }
-
-    @Override
-    public void initializeTransformsGroup(int imagesNumber) {
-        super.initializeTransformsGroup(imagesNumber);
-    }
-
     @Override
     public BranchGroup createScene() {
       
@@ -61,13 +50,6 @@ public class SecuencialVisualization extends AbstractVisualization{
         }
         
         return this.objRoot;
-    }
-
-    @Override
-    public void drawImage(Texture tex, Vector3f pos, int index) {
-        
-        super.drawImage(tex, pos, index);        
-
     }
 
 }

@@ -8,6 +8,7 @@ package visualizationmodule;
 import com.sun.j3d.utils.image.TextureLoader;
 import java.awt.Container;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import javax.media.j3d.Texture;
 
@@ -42,6 +43,14 @@ public class ImageLoader {
             images.add(texture); 
             
         }
+        
+        Collections.sort(weights, Collections.reverseOrder());
+
+        for(int i = 1; i < weights.size(); i++){
+        }
+        
+
+        
     }
         
         public ArrayList<Float> getWeights(){
