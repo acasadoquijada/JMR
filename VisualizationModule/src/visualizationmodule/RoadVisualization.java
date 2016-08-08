@@ -34,7 +34,7 @@ public class RoadVisualization extends AbstractVisualization {
             
             vector.z -= (2/ci.getWeights().get(1));
             
-           // System.out.println("Imagen " + i + " valor de z " + vector.z);
+           //    System.out.println("Imagen " + i + " valor de z " + vector.z);
             
             drawImage(ci.getImages().get(i), vector, i);
             

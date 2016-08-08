@@ -15,13 +15,10 @@ import com.sun.j3d.utils.pickfast.PickCanvas;
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
-import java.awt.Color;
 import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.swing.JPanel;
-import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
 
@@ -42,7 +39,7 @@ public class JPanelCanvas3D extends JPanel {
     
    // private final double defaultZoom = 2.414213562373095 ;
     
-    private final double defaultZoom = 3.65418546;
+    //private final double defaultZoom = 3.65418546;
     
     private PickCanvas pickCanvas; 
     
@@ -60,22 +57,29 @@ public class JPanelCanvas3D extends JPanel {
     
     public static final int ROAD = 2;
     
+    public TransformGroup tg ;
+    
 
     private void initializeVisualizations(){
         
         // Secuencial visualization
-        SecuencialVisualization sv = new SecuencialVisualization(6);
+        SecuencialVisualization sv = new SecuencialVisualization(20);
         
         secuencialVisualization = sv.createScene();
         secuencialVisualization.setCapability(BranchGroup.ALLOW_DETACH);
  
         
         // Spiral visualization
+        
+        tg = new TransformGroup();
+        
         SpiralVisualization vs = new SpiralVisualization(75);
         
         spiralVisualization = vs.createScene();
         spiralVisualization.setCapability(BranchGroup.ALLOW_DETACH);
 
+        tg = vs.getTransformGroup();
+        
         
         // Road visualization
         RoadVisualization rv = new RoadVisualization(9);
@@ -122,6 +126,13 @@ public class JPanelCanvas3D extends JPanel {
                 
                 break;
                 
+            case ROAD:
+                
+                simpleU.getLocale().replaceBranchGraph(roadVisualization, visualizationArray.get(v));
+                
+                currentVisualization = v; 
+                
+                
                 
         }
      
@@ -151,13 +162,13 @@ public class JPanelCanvas3D extends JPanel {
         this.vcamara    = new Vector3d();
         this.tcamara    = new Transform3D();
         
-        
+       // 
         canvas3D = new Canvas3D(config);
         add("Center", canvas3D);
         
         simpleU = new SimpleUniverse(canvas3D);
-        
-        //this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
+            
+        this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
         
         //simpleU.getViewingPlatform().setNominalViewingTransform();
 
@@ -175,13 +186,15 @@ public class JPanelCanvas3D extends JPanel {
         
         //
             BoundingSphere bounds =
-        new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 200.0);
+        new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 20000.0);
      
       OrbitBehavior m_orbit = new OrbitBehavior(canvas3D, 
         OrbitBehavior.REVERSE_ALL);
+      
+      
        
        
- 
+        m_orbit.setRotationCenter(new Point3d(1.0,0,0));
         m_orbit.setSchedulingBounds(bounds);
         m_orbit.setZoomFactor(-1d);
         this.simpleU.getViewingPlatform().setViewPlatformBehavior(m_orbit);
@@ -194,27 +207,48 @@ public class JPanelCanvas3D extends JPanel {
         
 
         
+            Pick p= new Pick(canvas3D,spiralVisualization);
+            p.setSchedulingBounds ( new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 50000000f) ) ;
+            spiralVisualization.addChild(p);
+
+     /*  
+        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);        
+   
+        
+        ProcesaRaton pc = new ProcesaRaton(tg);
         
         
-      
-    /*    MouseRotate behavior1 = new MouseRotate(canvas3D); 
-        roadVisualization.addChild(behavior1); 
+        pc.setSchedulingBounds(bounds);
+        
+        
+        tg.addChild(pc);
+       */ 
+        //ProcesaRaton pc = new ProcesaRaton
+        
+        /*
+        MouseRotate behavior1 = new MouseRotate(); 
+        behavior1.setTransformGroup(tg);
         behavior1.setSchedulingBounds(bounds); 
+        visualizationArray.get(currentVisualization).addChild(behavior1);        
+        
  
         // Create the zoom behavior node 
-        MouseZoom behavior2 = new MouseZoom(canvas3D); 
-        roadVisualization.addChild(behavior2); 
+        MouseZoom behavior2 = new MouseZoom(); 
+         behavior2.setTransformGroup(tg);
+        visualizationArray.get(currentVisualization).addChild(behavior2); 
         behavior2.setSchedulingBounds(bounds); 
  
         // Create the translate behavior node 
-        MouseTranslate behavior3 = new MouseTranslate(canvas3D); 
-        roadVisualization.addChild(behavior3); 
-        behavior3.setSchedulingBounds(bounds); */
-        
+        MouseTranslate behavior3 = new MouseTranslate(); 
+         behavior3.setTransformGroup(tg);
+        visualizationArray.get(currentVisualization).addChild(behavior3); 
+        behavior3.setSchedulingBounds(bounds); 
+        */
   
         
-        simpleU.addBranchGraph(spiralVisualization);
-
+        simpleU.addBranchGraph(visualizationArray.get(currentVisualization));
+        //mouseBehaviour();
     }
 
     private void mouseBehaviour(){
@@ -238,9 +272,15 @@ public class JPanelCanvas3D extends JPanel {
         
         char key = evt.getKeyChar();
         
+        float ang=0.0f;
+        
+        System.out.println(vcamara);
         switch(key){
             
             case 'w':
+                ang += 0.1;
+                
+                tcamara.rotY(Math.toRadians(ang));
                 
                 vcamara.y += JPanelCanvas3D.MOVESPEED/2;
                                 
@@ -260,10 +300,23 @@ public class JPanelCanvas3D extends JPanel {
                 
                 vcamara.x += JPanelCanvas3D.MOVESPEED/2;
                 break;
+                
+            case 'q':
+                
+                vcamara.x -= JPanelCanvas3D.MOVESPEED/2;
+                vcamara.y -= JPanelCanvas3D.MOVESPEED/2;
+                break;
+                
+            case 'e':
+                
+                vcamara.x += JPanelCanvas3D.MOVESPEED/2;
+                vcamara.y += JPanelCanvas3D.MOVESPEED/2;
+                break;                
+                
         }
         
         
-        tcamara.set(vcamara);
+    //   tcamara.set(vcamara);
         camara.setTransform(tcamara);
         
         

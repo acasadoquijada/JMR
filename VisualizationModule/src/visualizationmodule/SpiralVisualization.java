@@ -7,6 +7,7 @@ package visualizationmodule;
 
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Texture;
+import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
 
 /**
@@ -33,6 +34,11 @@ public class SpiralVisualization extends AbstractVisualization {
        
 
     }
+    
+    @Override
+    public TransformGroup getTransformGroup(){
+        return super.getTransformGroup();
+    } 
     
     @Override
     public BranchGroup createScene() {

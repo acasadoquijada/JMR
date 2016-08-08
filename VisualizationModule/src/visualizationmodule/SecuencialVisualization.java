@@ -27,25 +27,37 @@ public class SecuencialVisualization extends AbstractVisualization{
     @Override
     public BranchGroup createScene() {
       
-        Vector3f rightVector = new Vector3f(0.0f,0.0f,0.0f);
-        Vector3f leftVector = new Vector3f(0.0f,0.0f,0.0f);
+        Vector3f vector = new Vector3f(0.0f,0.0f,0.0f);
         
-        drawImage(ci.getImages().get(0),rightVector,0);
+        float leftPos = 0.0f;
+        float rightPos = 0.0f;
+        float yPos = 0.0f;
+        
+        
+        drawImage(ci.getImages().get(0),vector,0);
         
         
         for(int i = 1; i < this.imagesNumber; i++){
             
             if(i%2 != 0){
-                rightVector.x += 1.5;
-                drawImage(ci.getImages().get(i),rightVector,i);    
+                rightPos += 1.5;
+                vector.x = rightPos;
                 
             }
             
             else{
-                leftVector.x += -1.5;
-                drawImage(ci.getImages().get(i),leftVector,i);
+                leftPos -= 1.5;
+
+                vector.x = leftPos;
+               
       
             }
+            
+            yPos -= 0.03;
+            vector.y = yPos;
+            
+            drawImage(ci.getImages().get(i),vector,i);
+            System.out.println(vector);
             
         }
         

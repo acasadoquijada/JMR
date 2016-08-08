@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import javax.media.j3d.Texture;
+import javax.swing.plaf.TextUI;
 
 
 
@@ -33,14 +34,28 @@ public class ImageLoader {
         TextureLoader loader = new TextureLoader
         ("C:\\Users\\Alejandro\\Desktop\\pug.png",
                 new Container());
+        TextureLoader loader2 = new TextureLoader
+        ("C:\\Users\\Alejandro\\Desktop\\pastor-aleman.jpg",
+                new Container());
+        
+        TextureLoader loader3 = new TextureLoader
+        ("C:\\Users\\Alejandro\\Desktop\\corgi.jpg",
+                new Container());
         
         Texture texture = loader.getTexture();
-        
+        Texture texture2 = loader2.getTexture();
+        Texture texture3 = loader3.getTexture();
         
         for(int i = 1; i <= n; i++) {
             
             weights.add(random_number.nextFloat());
-            images.add(texture); 
+            
+            if(i%3 == 0)
+                images.add(texture); 
+            else if(i%3 == 1)
+                images.add(texture2);
+            else
+                images.add(texture3);
             
         }
         
@@ -60,4 +75,8 @@ public class ImageLoader {
         public ArrayList<Texture> getImages(){
             return images;
     }   
+
+    private void Contanier() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

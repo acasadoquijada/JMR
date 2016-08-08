@@ -6,7 +6,10 @@
 package visualizationmodule;
 
 import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.geometry.Cone;
+import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.Primitive;
+import com.sun.j3d.utils.geometry.Sphere;
 import java.awt.Color;
 import static java.awt.Component.TOP_ALIGNMENT;
 import java.util.ArrayList;
@@ -64,6 +67,12 @@ public abstract class AbstractVisualization {
         
     }
     
+    public TransformGroup getTransformGroup(){
+        
+        
+        return transformsGroup.get(0);
+        
+    }
     private void initializeTransforms3D(int imagesNumber){
         Transform3D t;
         transforms = new ArrayList();
@@ -107,10 +116,12 @@ public abstract class AbstractVisualization {
         ap.setTextureAttributes(texAttr);   
         
         PointAttributes pa = new PointAttributes();
+        //pa.setPointSize(5f);
         pa.setPointAntialiasingEnable(true);
+        
         LineAttributes la=new LineAttributes();
-
         la.setLineAntialiasingEnable(true);
+    
         ap.setLineAttributes(la);     
         ap.setPointAttributes(pa);
         
@@ -130,8 +141,11 @@ public abstract class AbstractVisualization {
 
     
         Box b = new Box(tam,tam,tam,primflags,ap);
-    
-       // Sphere b = new Sphere(tam,primflags,64,ap);
+
+        
+        //Cylinder b = new Cylinder(tam,tam*2,primflags,64,64,ap);
+        
+        //Sphere b = new Sphere(tam,primflags,64,ap);
         
         
         trans.setTranslation(pos);
