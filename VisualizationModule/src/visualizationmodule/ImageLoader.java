@@ -41,14 +41,22 @@ public class ImageLoader {
         TextureLoader loader3 = new TextureLoader
         ("C:\\Users\\Alejandro\\Desktop\\corgi.jpg",
                 new Container());
+       /*  TextureLoader loader4 = new TextureLoader
+        ("C:\\Users\\Alejandro\\Desktop\\chema.jpg",
+                new Container()); */
         
         Texture texture = loader.getTexture();
         Texture texture2 = loader2.getTexture();
         Texture texture3 = loader3.getTexture();
+      // Texture texture4 = loader4.getTexture();
+
+        
         
         for(int i = 1; i <= n; i++) {
             
             weights.add(random_number.nextFloat());
+            
+            //images.add(texture4);
             
             if(i%3 == 0)
                 images.add(texture); 

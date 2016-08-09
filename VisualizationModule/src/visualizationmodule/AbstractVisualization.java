@@ -232,9 +232,12 @@ public abstract class AbstractVisualization {
     }
     
       private void createBackground(){
-          
-        Background background = new Background(new Color3f(1.000f, 0.980f, 0.980f));
+          //0.941, 0.973, 1.000
+        //Background background = new Background(new Color3f(1.000f, 0.980f, 0.980f));
 
+        Background background = new Background(new Color3f(0.941f, 0.973f, 1.000f));
+
+          
         BoundingSphere sphere = new BoundingSphere(new Point3d(0,0,0), 10000000);
         background.setApplicationBounds(sphere);
         

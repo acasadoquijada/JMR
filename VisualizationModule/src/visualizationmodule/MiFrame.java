@@ -42,7 +42,7 @@ public class MiFrame extends JFrame {
 
         crearHJV3D();
         
-        crearGUI();
+        //crearGUI();
         
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         
@@ -102,7 +102,7 @@ public class MiFrame extends JFrame {
        
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxSecuencialActionPerformed(evt);
+              //  jCheckBoxSecuencialActionPerformed(evt);
             }
         });
 
@@ -115,7 +115,7 @@ public class MiFrame extends JFrame {
        
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxSpiralActionPerformed(evt);
+              //  jCheckBoxSpiralActionPerformed(evt);
             }
         });
         
@@ -123,7 +123,7 @@ public class MiFrame extends JFrame {
         
         jMenuItemResetPosition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemResetPositionActionPerformed(evt);
+                //jMenuItemResetPositionActionPerformed(evt);
             }
         });
         
@@ -138,30 +138,6 @@ public class MiFrame extends JFrame {
         pack();
     }
                        
-    private void jCheckBoxSecuencialActionPerformed(java.awt.event.ActionEvent evt){
-        
-        if(jCheckBoxSpiral.isSelected()){
-            jCheckBoxSpiral.setSelected(false);
-        }
-        
-        hj3d.setVisualization(0);
-    }
-          
-    private void jCheckBoxSpiralActionPerformed(java.awt.event.ActionEvent evt){
-        
-        if(jCheckBoxSecuencial.isSelected()){
-            jCheckBoxSecuencial.setSelected(false);
-        }
-        
-         hj3d.setVisualization(1);
-        
-    }
-    
-    private void jMenuItemResetPositionActionPerformed(java.awt.event.ActionEvent evt){
-      
-        hj3d.resetCameraPosition();
-        
-    }
 
 
     /**

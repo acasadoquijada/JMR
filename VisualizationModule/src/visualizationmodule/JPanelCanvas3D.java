@@ -59,6 +59,18 @@ public class JPanelCanvas3D extends JPanel {
     
     public TransformGroup tg ;
     
+    
+    
+    // GUI
+    
+    private javax.swing.JPopupMenu popmenu;
+    private javax.swing.JMenu menuVisualization;
+    private javax.swing.JMenu menuOption;
+    private javax.swing.JCheckBoxMenuItem itemSecuencial;
+    private javax.swing.JCheckBoxMenuItem itemSpiral;
+    private javax.swing.JCheckBoxMenuItem itemRoad;
+    private javax.swing.JMenuItem itemResetPosition;
+    
 
     private void initializeVisualizations(){
         
@@ -150,6 +162,39 @@ public class JPanelCanvas3D extends JPanel {
     }
         
     
+    private void initializeGUI(){
+        
+        popmenu = new javax.swing.JPopupMenu();
+        menuVisualization = new javax.swing.JMenu();   
+        menuOption = new javax.swing.JMenu();   
+
+        itemSecuencial = new javax.swing.JCheckBoxMenuItem();
+        itemSpiral = new javax.swing.JCheckBoxMenuItem();
+        itemRoad = new javax.swing.JCheckBoxMenuItem();
+        itemResetPosition = new javax.swing.JMenuItem();
+        
+        
+        menuVisualization.setText("Visualizations");
+        menuOption.setText("Options");
+        
+        itemSecuencial.setText("Secuencial");
+        itemSpiral.setText("Spiral");
+        itemRoad.setText("Road");
+        itemResetPosition.setText("Reset position");
+        
+        menuVisualization.add(itemSecuencial);
+        menuVisualization.add(itemSpiral);
+        menuVisualization.add(itemRoad);
+        
+        menuOption.add(itemResetPosition);
+        
+        popmenu.add(menuVisualization);
+        popmenu.add(menuOption);
+        
+        
+        
+        
+    }
     
     public JPanelCanvas3D() {
         
@@ -158,6 +203,7 @@ public class JPanelCanvas3D extends JPanel {
            SimpleUniverse.getPreferredConfiguration();
 
         initializeVisualizations();
+        initializeGUI();
         
         this.vcamara    = new Vector3d();
         this.tcamara    = new Transform3D();
@@ -248,7 +294,8 @@ public class JPanelCanvas3D extends JPanel {
   
         
         simpleU.addBranchGraph(visualizationArray.get(currentVisualization));
-        //mouseBehaviour();
+        mouseBehaviour();
+        popmenuBehaviour();
     }
 
     private void mouseBehaviour(){
@@ -261,9 +308,102 @@ public class JPanelCanvas3D extends JPanel {
             }
         });
         
+        this.canvas3D.addMouseListener(new java.awt.event.MouseAdapter() {
+            
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt){
+                if(evt.getClickCount() >= 2){
+                    showPopup(evt);
+                }
+            }
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt){
+                if(evt.getClickCount() >= 2){
+                    showPopup(evt);
+                }
+            }
+            
+        });
+
+    }
+    
+    private void popmenuBehaviour(){
         
+        itemSecuencial.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                itemSecuencialMousePressed(evt);
+            }
+        });
+        
+         itemSpiral.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                itemSpiralMousePressed(evt);
+            }
+        });    
+         
+        itemRoad.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                itemRoadMousePressed(evt);
+            }
+        });  
+        
+        itemResetPosition.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                itemResetPositionMousePressed(evt);
+            }
+        });
+    
+    }
+
+    private void itemSecuencialMousePressed(java.awt.event.MouseEvent evt){
+        
+        this.setVisualization(SECUENCIAL);
         
     }
+    
+    private void itemSpiralMousePressed(java.awt.event.MouseEvent evt){
+        
+        this.setVisualization(SPIRAL);
+    }
+    
+    private void itemRoadMousePressed(java.awt.event.MouseEvent evt){
+        
+        this.setVisualization(ROAD);
+    }
+    
+    private void itemResetPositionMousePressed(java.awt.event.MouseEvent evt){
+        
+        this.resetCameraPosition();
+    }
+    
+    private void showPopup(java.awt.event.MouseEvent evt){
+        if (evt.isPopupTrigger()) {
+            popmenu.show(evt.getComponent(),
+                    evt.getX(), evt.getY());
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     private void formKeyPressed(java.awt.event.KeyEvent evt) {                                
 
