@@ -70,7 +70,7 @@ public class JPanelCanvas3D extends JPanel {
     private javax.swing.JCheckBoxMenuItem itemSpiral;
     private javax.swing.JCheckBoxMenuItem itemRoad;
     private javax.swing.JMenuItem itemResetPosition;
-    
+    private javax.swing.ButtonGroup buttonGroupVisualization;
 
     private void initializeVisualizations(){
         
@@ -167,11 +167,19 @@ public class JPanelCanvas3D extends JPanel {
         popmenu = new javax.swing.JPopupMenu();
         menuVisualization = new javax.swing.JMenu();   
         menuOption = new javax.swing.JMenu();   
+        
+        buttonGroupVisualization = new javax.swing.ButtonGroup();
 
         itemSecuencial = new javax.swing.JCheckBoxMenuItem();
         itemSpiral = new javax.swing.JCheckBoxMenuItem();
         itemRoad = new javax.swing.JCheckBoxMenuItem();
         itemResetPosition = new javax.swing.JMenuItem();
+
+        buttonGroupVisualization.add(itemSecuencial);
+        buttonGroupVisualization.add(itemSpiral);
+        buttonGroupVisualization.add(itemRoad);
+        
+        itemSpiral.setSelected(true);
         
         
         menuVisualization.setText("Visualizations");
