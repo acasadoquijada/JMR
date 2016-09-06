@@ -1,0 +1,287 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package jmr.iu;
+
+import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
+import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.geometry.ColorCube;
+import com.sun.j3d.utils.geometry.Primitive;
+import com.sun.j3d.utils.image.TextureLoader;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import javax.media.j3d.Appearance;
+import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.ColoringAttributes;
+import javax.media.j3d.Font3D;
+import javax.media.j3d.FontExtrusion;
+import javax.media.j3d.PointAttributes;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.Text3D;
+import javax.media.j3d.Texture;
+import javax.media.j3d.TextureAttributes;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.media.j3d.TransparencyAttributes;
+import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
+import javax.vecmath.Vector3d;
+import jmr.result.ResultList;
+
+/**
+ *
+ * @author alejandro
+ */
+public class PathPanel extends Abstract3DPanel {
+
+    /**
+     * Creates new form PathPanel
+     */
+    public PathPanel() {
+        super();
+        
+        simpleU.getViewer().getView().setBackClipDistance(1000);
+        TYPE = PATH;
+        planeActive = true;
+    }
+    
+    public PathPanel(ResultList list){
+        super(list);        
+    }
+    
+    
+    private void pathEnd(Vector3d pos){
+        
+        Transform3D tra = new Transform3D();
+        TransformGroup tg = new TransformGroup();
+        
+        ColorCube b = new ColorCube(0.5f);
+      
+        
+        Appearance ap = new Appearance();
+        
+       /* TextureLoader loader = new TextureLoader(
+                "H:\\Dropbox\\Universidad\\Cuarto_año\\2 cuatrimestre\\TFG\\stop.png"
+                ,new Container());
+        */
+        
+        ///home/alejandro/Dropbox/Universidad/Cuarto_año/2 cuatrimestre/TFG
+
+        TextureLoader loader = new TextureLoader(
+        "/home/alejandro/Dropbox/Universidad/Cuarto_año/2 cuatrimestre/TFG/stop",
+                new Container());
+        
+      
+        
+        Texture tex = loader.getTexture();
+        
+        
+        tex.setBoundaryModeS(Texture.WRAP);
+
+        tex.setBoundaryModeT(Texture.WRAP);
+        
+        TextureAttributes texAttr = new TextureAttributes();
+        
+        texAttr.setTextureMode(TextureAttributes.MODULATE);
+
+        
+        ColoringAttributes coloringAttributes = new ColoringAttributes();
+        coloringAttributes.setColor(new Color3f(Color.RED));
+        
+        TransparencyAttributes tAttr = new TransparencyAttributes();
+        tAttr.setTransparencyMode(TransparencyAttributes.NICEST);
+        
+        ap.setTransparencyAttributes(tAttr);
+        
+        ap.setTexture(tex);
+        
+        ap.setTextureAttributes(texAttr);   
+        
+        int primflags = Primitive.GENERATE_NORMALS +
+
+        Primitive.GENERATE_TEXTURE_COORDS; 
+       
+        Box stop = new Box(0.5f,0.5f,0.5f,primflags,ap);
+
+        pos.z -= 2.0;
+
+        
+        tra.setTranslation(pos);
+        
+        tg.setTransform(tra);
+        
+        tg.addChild(stop);
+        
+        this.scene.addChild(tg);   
+        
+    }
+    
+    @Override
+    public void createScene() {
+        Vector3d vector = new Vector3d(0.0f,0.0f,0.0f);
+            
+        drawPosition(vector,0);
+        drawImage(getResultMetada(0),vector);
+        
+        double puntoAnt = 0.0f;
+
+        double punto = 0.0f;
+
+        double puntoSig = 0.0f;
+        
+        boolean entro = false;
+        
+
+        for(int i = 1; i < results.size()-1; i++){
+            
+            punto = getVector(i).magnitude()*150;
+            
+            if(entro){
+                punto=puntoAnt;
+            }
+            
+            
+            while(Math.abs(puntoAnt - punto) <= 2.500000000){
+                punto += 0.1;
+                entro = true;
+            }
+
+            
+           // vector.z = -punto;
+          
+            vector.z -= 5.0;
+            
+            
+            drawImage(getResultMetada(i),vector);
+            drawPosition(vector, i);
+            System.out.println(
+                    "\nMagnitud: " + getVector(i).magnitude() +
+                    "\nPunto modificado: " + punto +                    
+                    "\nPunto siguiente: " + puntoAnt
+                                
+            );
+
+            puntoAnt = punto;
+    
+        }
+        
+      //  pathEnd(vector);
+            
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    @Override
+    public void mouseControl() {
+        
+        BoundingSphere bounds =
+        new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 2000.0);
+     
+        m_orbit = new OrbitBehavior(canvas3d, 
+        OrbitBehavior.REVERSE_ALL);
+        
+        m_orbit.setRotationCenter(new Point3d(1.0,0,0));
+        m_orbit.setSchedulingBounds(bounds);
+        m_orbit.setZoomFactor(-1d);
+        
+        m_orbit.setRotYFactor(0);
+        m_orbit.setRotXFactor(0);
+        m_orbit.setTranslateEnable(false);    
+        simpleU.getViewingPlatform().setViewPlatformBehavior(m_orbit);
+
+        this.simpleU.getViewingPlatform().setNominalViewingTransform();
+    }
+
+    @Override
+    protected void drawPosition(Vector3d pos, int index) {
+        
+        Font font = new Font("Verdana", Font.PLAIN, 1);
+    
+        Font3D f3d = new Font3D(font.deriveFont(0.6f),new FontExtrusion());
+        
+        
+        Text3D text = new Text3D(f3d, new String("Java3D.org"), new Point3f(0.0f,
+				0.0f, 0.0f));
+              
+        String st = new String();
+        
+        st = String.valueOf(index);
+        
+        text.setString(st);
+        
+        text.setCharacterSpacing(0.1f);
+        
+        text.setAlignment(Text3D.ALIGN_CENTER);
+
+        Shape3D sh = new Shape3D();
+        
+        sh.setGeometry(text);
+        
+        Appearance aprnc = new Appearance();
+        
+        PointAttributes pa = new PointAttributes();
+        
+        pa.setPointAntialiasingEnable(true);
+
+        aprnc.setPointAttributes(pa);
+   
+        sh.setAppearance(aprnc);
+ 
+        TransformGroup tg = new TransformGroup();
+        
+        Transform3D t3d = new Transform3D();
+        
+        Vector3d v = new Vector3d(pos);      
+        
+       
+        v.y += 1.1;
+        //v.x -= 0.3;
+             
+        System.out.println("Punto numero: " + v);
+        
+
+        t3d.setTranslation(v);
+        
+        t3d.setScale(0.7);
+        
+        tg.setTransform(t3d);
+        
+        tg.addChild(sh);
+        
+        position.addChild(tg);
+
+    }
+
+    @Override
+    protected void sceneControl() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // End of variables declaration//GEN-END:variables
+}
