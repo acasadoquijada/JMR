@@ -9,12 +9,15 @@ import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javafx.scene.paint.Color;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.Font3D;
 import javax.media.j3d.FontExtrusion;
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineArray;
+import javax.media.j3d.LineAttributes;
 import javax.media.j3d.LineStripArray;
 import javax.media.j3d.PointAttributes;
 import javax.media.j3d.PolygonAttributes;
@@ -23,6 +26,7 @@ import javax.media.j3d.Text3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.View;
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
@@ -143,13 +147,6 @@ public class RingPanel extends Abstract3DPanel {
         ringValues.removeAll(Arrays.asList(arrayAux));
 
 
-        
-        for(int i = 0; i < ringValues.size();i++){
-            System.out.println(ringValues.get(i));
-        }
-        
-       
-        
         int images = 1;
                 
         int tam = 0;
@@ -167,15 +164,20 @@ public class RingPanel extends Abstract3DPanel {
           
             radio = tam;
             
-            System.out.println("Radio: " + radio + " radio anterior: " + radioAnt);
 
             while( (radio <= radioAnt) ){                
          
                 radio += tam;
                 
             }
+            
+            
+            while((radio - radioAnt) <= 4){
+                radio += tam;
+            }
            
-                
+            System.out.println("Radio: " + radio + " radio anterior: " + radioAnt);
+
             double zAux = 0;
             // Coger la coordenada del Array de ringValues
             for(int j = 0; j < tam; j++){
@@ -219,7 +221,7 @@ public class RingPanel extends Abstract3DPanel {
     private void drawRadio(int radio,double z){
         
 
-        int coorNumber =  radio * 6;
+        int coorNumber =  radio * 40;
         Transform3D t = new Transform3D();
         TransformGroup tg = new TransformGroup();
         
@@ -227,12 +229,21 @@ public class RingPanel extends Abstract3DPanel {
         
         Appearance ap = new Appearance();
         
-        PolygonAttributes polyAttribs = 
-                new PolygonAttributes( PolygonAttributes.POLYGON_LINE, 
-                        PolygonAttributes.CULL_NONE, 0 );
+        LineAttributes la = new LineAttributes();
         
+        la.setLineAntialiasingEnable(true);
         
-       LineArray ls = new LineArray(coorNumber,LineArray.COORDINATES);
+        la.setLineWidth(2.5f);
+        
+        ap.setLineAttributes(la);
+        
+        ColoringAttributes ca = new ColoringAttributes();
+        
+        ca.setColor(new Color3f(0.545f, 0.271f, 0.075f));
+        
+        ap.setColoringAttributes(ca);
+        
+        LineArray ls = new LineArray(coorNumber,LineArray.COORDINATES);
         
         double slice = 2 * Math.PI / coorNumber;
 
@@ -258,7 +269,7 @@ public class RingPanel extends Abstract3DPanel {
         
         tg.setTransform(t);
         
-        tg.addChild(new Shape3D(ls));
+        tg.addChild(new Shape3D(ls, ap));
         
         
         position.addChild(tg);

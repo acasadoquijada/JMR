@@ -508,6 +508,9 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         position.removeAllChildren();
         
         clean();
+                
+        if(TYPE == SPIRAL)
+            spiralIndex = 0;
         
         createScene();
         mouseOver();
@@ -517,6 +520,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         if(fogActive()){
             fog(true);
         }
+
         
         
     }
