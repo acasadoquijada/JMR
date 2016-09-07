@@ -5,17 +5,16 @@
  */
 package jmr.iu;
 
-import java.awt.Font;
+import java.awt.HeadlessException;
+import java.awt.event.MouseEvent;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
-import javax.media.j3d.Font3D;
-import javax.media.j3d.FontExtrusion;
 import javax.media.j3d.Geometry;
-import javax.media.j3d.PointAttributes;
 import javax.media.j3d.Shape3D;
-import javax.media.j3d.Text3D;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
@@ -24,23 +23,46 @@ import javax.vecmath.Vector3d;
  *
  * @author alejandro
  */
-public class AveragePanel extends Abstract3DPanel {
+public class LimitPanel extends Abstract3DPanel {
 
     /**
      * Creates new form AveragePanel
      */
-    public AveragePanel() {
+    
+    private double limit;
+    private JMenu limitMenu;
+    private JMenuItem limitMenuItemValue;
+    
+    public LimitPanel() {
         super();
+
         createLimitPlanes(0.5);
-        //aquí4
+
+        limit = 0.5;
+        
+        limitMenu = new JMenu();
+        limitMenu.setText("Limit");
+        
+        limitMenuItemValue = new JCheckBoxMenuItem();
+        limitMenuItemValue.setText("Limit value");
+        
+        limitMenu.add(limitMenuItemValue);
+
+        popMenuExpansion(limitMenu);
+
         planeActive = true;
-       // axisActive = true;
+        
+        eventControl();
 
     }
     
+    private void updateText(String s){
+        
+        limitMenu.setText("A");
+        
+    }
+    
     private void createLimitPlanes(double lim){
-
-
 
         Appearance ap = new Appearance();
 
@@ -80,7 +102,8 @@ public class AveragePanel extends Abstract3DPanel {
         Vector3d v = new Vector3d();
        
         drawImage(getResultMetada(0), v);
-        
+        drawPosition(v, 0);
+      
         Vector3d[] vArray = new Vector3d[results.size()];
         
         for(int i = 0; i < vArray.length; i++){
@@ -88,6 +111,11 @@ public class AveragePanel extends Abstract3DPanel {
         }
         
         double newDist = 2.0;
+        
+        double leftZ = 2.0;
+        double rightZ = 2.0;
+        
+        
         
         for(int i = 1; i < results.size(); i++){
             
@@ -99,39 +127,41 @@ public class AveragePanel extends Abstract3DPanel {
             // Lo trunco para saber si va a la izquierda o derecha
             
             double xTrunc = Math.floor(x * 10) / 10;
-            
-            
-            int compX = Double.compare(xTrunc, 0.5);
-            
-    
-            
-            //negativo
-            if(compX < 0){
-                x *= 120;
-                v.x = - x;
-                
-            }
-            //positivo o igual
-            else{
-                x *= 120;
-                v.x = x;       
-            }
-            
-            // Obtengo y
-            double y =getVector(i).coordinate(1);
-            
-            // "Reinicio" el valor de x
-            x = getVector(i).coordinate(0);
+   
+            int compX = Double.compare(xTrunc, limit);
+
+                      
+            // Obtengo y          
+            double y = getVector(i).coordinate(1);  
             
             // Calculo z
             double z = ((x+y)/2) * 25;
             
             y =  getVector(i).coordinate(1) *120;
             
-            v.y = y;
+            v.y = y; 
             
+            //negativo
+            if(compX < 0){
+                x *= 120;
+                v.x = - x;
+                z -= leftZ;
+                leftZ += 2.0;
+                
+            }
+            //positivo o igual
+            else{
+                x *= 60;
+                v.x = x; 
+                z -= rightZ;
+                rightZ += 2.0;
+            }
+
+            //Salvo el valor de z
             v.z = z;
             
+            
+            /*
             boolean sigo = true;
             
             Vector3d auxV = new Vector3d();
@@ -158,7 +188,7 @@ public class AveragePanel extends Abstract3DPanel {
                 if(xDif < 0.7000 || yDif < 0.7000 || zDif < 0.7000){
                     
                     
-                    v.z += newDist;
+                    v.z -= newDist;
                     
                     // Asi nos aseguramos de que todas
                     // las imagenes se vean correctamente
@@ -176,81 +206,65 @@ public class AveragePanel extends Abstract3DPanel {
             
             vArray[i]=v;
             
-            System.out.println("Vector: " + v);
+            System.out.println("Vector: " + v);*/
             drawImage(getResultMetada(i), v);
+            drawPosition(v, i);
+
             
         }       
         
     }
 
     @Override
-    protected void mouseControl() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    protected void sceneControl() {
 
-    @Override
-    protected void drawPosition(Vector3d pos, int index) {
-      Font font = new Font("Verdana", Font.PLAIN, 1);
-    
-        Font3D f3d = new Font3D(font.deriveFont(0.6f),new FontExtrusion());
+        keyControl();
         
-        
-        Text3D text = new Text3D(f3d, new String("Java3D.org"), new Point3f(0.0f,
-				0.0f, 0.0f));
-              
-        String st = new String();
-        
-        st = String.valueOf(index);
-        
-        text.setString(st);
-        
-        text.setCharacterSpacing(0.1f);
-        
-        text.setAlignment(Text3D.ALIGN_CENTER);
-
-        Shape3D sh = new Shape3D();
-        
-        sh.setGeometry(text);
-        
-        Appearance aprnc = new Appearance();
-        
-        PointAttributes pa = new PointAttributes();
-        
-        pa.setPointAntialiasingEnable(true);
-
-        aprnc.setPointAttributes(pa);
-   
-        sh.setAppearance(aprnc);
- 
-        TransformGroup tg = new TransformGroup();
-        
-        Transform3D t3d = new Transform3D();
-        
-        Vector3d v = new Vector3d(pos);      
-        
-       
-        v.z += 0.5f; 
-        v.x += 0.5f;
-             
-        System.out.println("Punto numero: " + v);
-        
-
-        t3d.setTranslation(v);
-        
-        t3d.setScale(0.7);
-        
-        tg.setTransform(t3d);
-        
-        tg.addChild(sh);
-        
-        position.addChild(tg);
     }
     
     
+    private void eventControl(){
+        
+        limitMenuItemValue.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                limitMenuItemValueMousePressed(evt);
+            }
+        });
+  
+    }
     
-    
-    
-    
+    private void limitMenuItemValueMousePressed(MouseEvent evt){
+            try{
+                String b = JOptionPane.showInputDialog(null,
+                        "Values in range: 0 - 1\nActual value: " 
+                                + String.valueOf(limit),
+                "Set new limit", JOptionPane.INFORMATION_MESSAGE  );
+
+                double value = Double.parseDouble(b);
+
+                double xTrunc = Math.floor(value * 10) / 10;
+
+                if(0.1 <= xTrunc && xTrunc <= 1.0){
+                    
+                    limit = value;
+                    
+                    rePaint();  
+                }
+
+                else{
+                JOptionPane.showMessageDialog(null,"Values must be in range 0 - 1",
+                        "Error",JOptionPane.ERROR_MESSAGE); 
+                }
+
+        }catch(HeadlessException | NumberFormatException e){
+
+            System.out.println(e);
+            JOptionPane.showMessageDialog(null,"Values must be in range 0 - 1",
+                        "Error",JOptionPane.ERROR_MESSAGE); 
+
+        }
+    }
     
     
     
@@ -288,11 +302,6 @@ public class AveragePanel extends Abstract3DPanel {
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    @Override
-    protected void sceneControl() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 

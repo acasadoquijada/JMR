@@ -20,6 +20,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
+import java.awt.HeadlessException;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Enumeration;
@@ -51,6 +52,7 @@ import javax.media.j3d.ViewPlatform;
 import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.swing.JColorChooser;
+import javax.swing.JOptionPane;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
@@ -142,12 +144,11 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         scene.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
         scene.setCapability(BranchGroup.ALLOW_DETACH);
         
-
-        //    tg = new TransformGroup();
-        //     tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        //   tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        position.setCapability(BranchGroup.ALLOW_DETACH);
+        
 
         spiralIndex = 0;
+    
         this.vcamara    = new Vector3d();
         this.tcamara    = new Transform3D();
         this.tgBehaviour = new TransformGroup();
@@ -220,13 +221,16 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
      
         createScene();
         
+        mouseOver();
+        
+        
         simpleU.addBranchGraph(scene);
         
         if(position.numChildren() > 0){
             simpleU.addBranchGraph(position);        
         }
         
-        mouseOver();
+
         
         if(planeActive){
             Shape3D plane = createPlane();
@@ -291,11 +295,11 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
     MouseOverBehavior mouseOver = 
                 new MouseOverBehavior(canvas3d, scene);
-                
+              
         mouseOver.setSchedulingBounds (new BoundingSphere (new Point3d (),
         1000000));
         
-        backgroundScene.addChild(mouseOver);
+        scene.addChild(mouseOver);
     }
     
     private void createFog(){
@@ -346,10 +350,15 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
 
         int tam = results.size();
         
+        int numDes = getVector(0).dimension();
+        
+        
+        
         for(int i = 1; i < tam; i++){
             
             Vector v = new Vector(1);
             
+
             v.setCoordinate(0, getVector(i).coordinate(coor));
      
             l.add(new ResultMetadata(v, getImage(i)));
@@ -481,19 +490,33 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
                 
         fogBranch.detach();
     }
+    
     protected void deteachScene(){
 
-        scene.detach();
         
-        scene = new BranchGroup();
-        scene.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        scene.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-        scene.setCapability(BranchGroup.ALLOW_DETACH);
+
+    }
+    
+    protected void rePaint(){
+        scene.detach();
+        position.detach();
+
+        scene.removeAllChildren();
+        position.removeAllChildren();
         
         clean();
         
+        createScene();
+        mouseOver();
+        simpleU.addBranchGraph(scene);
+        simpleU.addBranchGraph(position);
+        
+        if(fogActive()){
+            fog(true);
+        }
+        
+        
     }
-    
     
 
     
@@ -633,8 +656,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         if(TYPE == SPIRAL){
             tam = 0.5f - ( spiralIndex / (float)((results.size()*3)));
             spiralIndex++;
-            System.out.println(spiralIndex + " - " + tam);
-           // tam = -0.0688889f;
+
         }
         
         else{
@@ -650,7 +672,6 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
            
            case BOX:
                 b = new Box(tam,tam,tam,primflags,ap);
-                b.setUserData("AJA");
                 break;
             
            case SPHERE:
@@ -677,6 +698,11 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
     };
    
 
+   protected void popMenuExpansion(javax.swing.JMenu menu){
+       
+       jPopupMenu.add(menu);
+       
+   }
     
     
     
@@ -786,7 +812,9 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
         tcamara.get(vcamara);
         
-        vcamara.z = 8;
+        vcamara.x = 0.0;
+        vcamara.y = 0.0;
+        vcamara.z = 8.0;
         
         
         tcamara.set(vcamara);
@@ -839,7 +867,6 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
 
       return plane;
     }
-    
     
     private void mouseBehaviour(){
 
@@ -1350,14 +1377,7 @@ public class MouseOverBehavior extends Behavior {
         if(jCheckBoxMenuItemBox.isSelected()){
             SHAPE = Abstract3DPanel.BOX;
             
-            deteachScene();
-            
-            createScene();
-            
-                        
-            if(fogActive()){
-                fog(true);
-            }
+            rePaint();
         }
 
 
@@ -1367,15 +1387,9 @@ public class MouseOverBehavior extends Behavior {
 
         if(jCheckBoxMenuItemSphere.isSelected()){
             SHAPE = Abstract3DPanel.SPHERE;
-            
-            deteachScene();
-            
-            createScene();
-            
-                        
-            if(fogActive()){
-                fog(true);
-            }
+
+            rePaint();
+
         }
         
     }//GEN-LAST:event_jCheckBoxMenuItemSphereActionPerformed

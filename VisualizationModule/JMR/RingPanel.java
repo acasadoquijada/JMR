@@ -251,7 +251,7 @@ public class RingPanel extends Abstract3DPanel {
         
     }
 
-    @Override
+
     protected void mouseControl() {
         BoundingSphere bounds =
         new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100000000.0);
