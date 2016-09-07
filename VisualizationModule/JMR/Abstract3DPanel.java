@@ -17,8 +17,8 @@ import java.awt.AWTEvent;
 import java.awt.Color;
 import static java.awt.Component.TOP_ALIGNMENT;
 import java.awt.Container;
-import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -32,14 +32,16 @@ import javax.media.j3d.Canvas3D;
 import javax.media.j3d.CapabilityNotSetException;
 import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.ExponentialFog;
+import javax.media.j3d.Font3D;
+import javax.media.j3d.FontExtrusion;
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineArray;
 import javax.media.j3d.LineAttributes;
-import javax.media.j3d.Node;
 import javax.media.j3d.PointAttributes;
 import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
+import javax.media.j3d.Text3D;
 import javax.media.j3d.Texture;
 import javax.media.j3d.TextureAttributes;
 import javax.media.j3d.Transform3D;
@@ -111,7 +113,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
 
     protected final static Dimension DEFAULT_COMMON_SIZE = new Dimension(100,100);
 
-    private TransformGroup camara;
+    TransformGroup camara;
     
     private Transform3D tcamara;
     private Vector3d vcamara;
@@ -175,22 +177,13 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         //this.simpleU.getViewingPlatform().setNominalViewingTransform();
 
         this.camara = simpleU.getViewingPlatform().getViewPlatformTransform();
-        
-        KeyNavigatorBehavior navegacion = new KeyNavigatorBehavior(camara);
-        BoundingSphere bounds =
-        new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 12000.0);
-        
-        navegacion.setSchedulingBounds(bounds);
-        
-        backgroundScene.addChild(navegacion);
+
+        cameraPos();
         
         //ViewPlatform
         viewplatform = simpleU.getViewingPlatform().getViewPlatform();
         
         simpleU.getViewer().getView().setBackClipDistance(100000);
-
-        
-        
 
         // To avoid problems between Java3D and Swing
 
@@ -204,8 +197,9 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         planeActive = false;
         positionActive = true;
         axisActive = false;
-
-        this.mouseControl();
+        
+        
+        this.sceneControl();
         this.mouseBehaviour();
 
     }
@@ -237,15 +231,11 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         if(planeActive){
             Shape3D plane = createPlane();
 
-            backgroundScene.addChild(plane);  //Add plane to content branch.
-            
-            this.simpleU.addBranchGraph(backgroundScene);  
-            
+            backgroundScene.addChild(plane);  //Add plane to content branch. 
         }
         
-        else{
-            this.simpleU.addBranchGraph(backgroundScene);
-        }
+        this.simpleU.addBranchGraph(backgroundScene);
+        
         
         if(axisActive){
             this.axis();
@@ -256,11 +246,43 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
 
     }
     
-    protected void mouseControl(){
+    protected void mouseControl(boolean rotX, boolean rotY){
+        
+        BoundingSphere bounds =
+        new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000000000000.0);
+     
+        m_orbit = new OrbitBehavior(canvas3d, 
+        OrbitBehavior.REVERSE_ALL | OrbitBehavior.STOP_ZOOM);
+      
+        if(!rotX){
+            m_orbit.setRotXFactor(0);
+        }
+        
+        if(!rotY){
+            m_orbit.setRotYFactor(0);
+        }
+        
+        
+
+        m_orbit.setRotationCenter(new Point3d(1.0,0,0));
+        m_orbit.setSchedulingBounds(bounds);
+        m_orbit.setZoomFactor(-1d);
+                
+        simpleU.getViewingPlatform().setViewPlatformBehavior(m_orbit);
+        
         
     }
     
     protected void keyControl(){
+
+        KeyNavigatorBehavior navegacion = new KeyNavigatorBehavior(camara);
+        BoundingSphere bounds =
+        new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 12000.0);
+        
+        navegacion.setSchedulingBounds(bounds);
+        
+        backgroundScene.addChild(navegacion);
+        
         
     }
     
@@ -348,7 +370,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
     }
     
     protected void resetView(){
-        this.simpleU.getViewingPlatform().setNominalViewingTransform();
+        cameraPos();
     }
     
     protected void updateInfo(double info1,double info2){
@@ -371,7 +393,65 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
     
     protected abstract void sceneControl();
     
-    protected abstract void drawPosition(Vector3d pos, int index);
+    protected void drawPosition(Vector3d pos, int index){
+        
+        Font font = new Font("Verdana", Font.PLAIN, 1);
+    
+        Font3D f3d = new Font3D(font.deriveFont(0.6f),new FontExtrusion());
+        
+        
+        Text3D text = new Text3D(f3d, "Java3D.org", new Point3f(0.0f,
+				0.0f, 0.0f));
+              
+        String st;
+        
+        st = String.valueOf(index);
+
+        text.setString(st);
+        
+        Shape3D sh = new Shape3D();
+        
+        sh.setGeometry(text);
+        
+        Appearance aprnc = new Appearance();
+        
+        PointAttributes pa = new PointAttributes();
+        
+        pa.setPointAntialiasingEnable(true);
+
+        aprnc.setPointAttributes(pa);
+   
+        sh.setAppearance(aprnc);
+ 
+        TransformGroup tg = new TransformGroup();
+        
+        Transform3D t3d = new Transform3D();
+        
+        Vector3d v = new Vector3d(pos);
+              
+        v.y += 0.7;
+        
+        if(index == 0){
+            v.x -= 0.2;
+        }
+
+        else{
+            int dig = (int)(Math.log10(index)+1);
+            v.x -= (0.2 *dig );   
+        }
+
+
+        t3d.setTranslation(v);
+        
+        t3d.setScale(0.7);
+        
+        tg.setTransform(t3d);
+        
+        tg.addChild(sh);
+        
+        position.addChild(tg);
+
+    }
     
     protected void fog(boolean activate){
                                 
@@ -696,6 +776,22 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
         return plane;
         
+        
+    }
+    
+    
+    protected void cameraPos(){
+        
+        camara.getTransform(tcamara);
+        
+        tcamara.get(vcamara);
+        
+        vcamara.z = 8;
+        
+        
+        tcamara.set(vcamara);
+        
+        camara.setTransform(tcamara);
         
     }
     

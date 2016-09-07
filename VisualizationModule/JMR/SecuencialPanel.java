@@ -5,20 +5,6 @@
  */
 package jmr.iu;
 
-import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
-import java.awt.Font;
-import javax.media.j3d.Appearance;
-import javax.media.j3d.BoundingSphere;
-import javax.media.j3d.Font3D;
-import javax.media.j3d.FontExtrusion;
-import javax.media.j3d.PointAttributes;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.Text3D;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.media.j3d.View;
-import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 import static jmr.iu.Abstract3DPanel.SECUENCIAL;
 import jmr.result.ResultList;
@@ -136,8 +122,6 @@ public class SecuencialPanel extends Abstract3DPanel {
                 leftPos -= 1.5;
 
                 vector.x = leftPos;
-               
-      
             }
      
             drawImage(getResultMetada(i),vector);
@@ -146,87 +130,14 @@ public class SecuencialPanel extends Abstract3DPanel {
 
         }
         
-        viewplatform.setViewAttachPolicy(View.NOMINAL_HEAD);
-        
     }
-    
-    
-
-    
     
     @Override
-    public void mouseControl() {
-        BoundingSphere bounds =
-        new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100000000.0);
-     
-        m_orbit = new OrbitBehavior(canvas3d, 
-        OrbitBehavior.REVERSE_ALL | OrbitBehavior.STOP_ZOOM);
+    protected void sceneControl() {
 
-        m_orbit.setRotationCenter(new Point3d(1.0,0,0));
-        m_orbit.setSchedulingBounds(bounds);
-        m_orbit.setZoomFactor(-1d);
-        m_orbit.setRotYFactor(0);
-        m_orbit.setRotXFactor(0);
-        m_orbit.setMinRadius(3.0);
-                    
-        simpleU.getViewingPlatform().setViewPlatformBehavior(m_orbit);
-        this.simpleU.getViewingPlatform().setNominalViewingTransform();
-    }
-    
-    
-    @Override
-    protected void drawPosition(Vector3d pos, int index) {
-        Font font = new Font("Verdana", Font.PLAIN, 1);
-    
-        Font3D f3d = new Font3D(font.deriveFont(0.6f),new FontExtrusion());
-        
-        
-        Text3D text = new Text3D(f3d, new String("Java3D.org"), new Point3f(0.0f,
-				0.0f, 0.0f));
-              
-        String st = new String();
-        
-        st = String.valueOf(index);
-
-        
-        text.setString(st);
-        
-        Shape3D sh = new Shape3D();
-        
-        sh.setGeometry(text);
-        
-        Appearance aprnc = new Appearance();
-        
-        PointAttributes pa = new PointAttributes();
-        
-        pa.setPointAntialiasingEnable(true);
-
-        aprnc.setPointAttributes(pa);
-   
-        sh.setAppearance(aprnc);
- 
-        TransformGroup tg = new TransformGroup();
-        
-        Transform3D t3d = new Transform3D();
-        
-        Vector3d v = new Vector3d(pos);
-        
-        
-        v.y += 1.1;
-        v.x -= 0.3;
-
-        t3d.setTranslation(v);
-        
-        t3d.setScale(0.7);
-        
-        tg.setTransform(t3d);
-        
-        tg.addChild(sh);
-        
-        position.addChild(tg);
+        keyControl();
 
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -244,10 +155,7 @@ public class SecuencialPanel extends Abstract3DPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    @Override
-    protected void sceneControl() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+  
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
