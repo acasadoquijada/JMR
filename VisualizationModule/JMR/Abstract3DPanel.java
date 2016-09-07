@@ -256,7 +256,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1000000000000.0);
      
         m_orbit = new OrbitBehavior(canvas3d, 
-        OrbitBehavior.REVERSE_ALL | OrbitBehavior.STOP_ZOOM);
+        OrbitBehavior.REVERSE_ALL );
       
         if(!rotX){
             m_orbit.setRotXFactor(0);
@@ -265,6 +265,9 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         if(!rotY){
             m_orbit.setRotYFactor(0);
         }
+        
+        m_orbit.setZoomFactor(100);
+        m_orbit.setTransFactors(3, 3);
         
         
 
@@ -1227,7 +1230,9 @@ public class MouseOverBehavior extends Behavior {
                                 
                                 
                                 if(p.getUserData() != null){
-                                  infoLabel.setText((String)p.getUserData());
+                                    String s = (String)p.getUserData();
+                                    if(!s.equals(infoLabel.getText()))
+                                        infoLabel.setText((String)p.getUserData());
                                 }
           
 
