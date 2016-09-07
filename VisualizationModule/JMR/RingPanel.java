@@ -8,11 +8,13 @@ package jmr.iu;
 import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Font3D;
 import javax.media.j3d.FontExtrusion;
 import javax.media.j3d.GeometryArray;
+import javax.media.j3d.LineArray;
 import javax.media.j3d.LineStripArray;
 import javax.media.j3d.PointAttributes;
 import javax.media.j3d.PolygonAttributes;
@@ -59,20 +61,7 @@ public class RingPanel extends Abstract3DPanel {
 
     @Override
     protected void createScene() {
-        
-        /* 
-        
-        Organizar los vectores
-       
-        11 en total.
-        
-        Hacer el radio segun el numero de elementos
 
-        Calcular el numero de elementos
-        
-        */
- 
-        
         Vector3d vector = new Vector3d(0.0f,0.0f,0.0f);
         
 
@@ -99,32 +88,20 @@ public class RingPanel extends Abstract3DPanel {
         double aux=0.0;
         
         ArrayList<Double> arrAux = new ArrayList<>();
-        
-        /*
- 
-        Dos bucles, uno para obtener datos
-        Otro para introducirlos
- 
-        */
-        
-        //List<Integer> arr = Arrays.asList(new Integer[10]);
+
         
         drawImage(getResultMetada(0),vector);
         drawPosition(vector, 0);
         
-        
+     
         for(int i = 1; i < results.size(); i++){
        
-            
-            // Obtengo el numero de anillos
+
             
             double x = getVector(i).coordinate(0);
             double xTrunc = Math.floor(x * 10) / 10;
-            
-            /* System.out.println("X: "+ x );
-            
-            System.out.println("Xtrun: " + xTrunc);
-            */
+
+
             ArrayList<Double> arr = new ArrayList<>();
             
             int comp = Double.compare(xTrunc, aux);
@@ -142,7 +119,7 @@ public class RingPanel extends Abstract3DPanel {
 
         }
         
-/*
+
         
         for(int i = 1; i < results.size(); i++){
             
@@ -160,6 +137,19 @@ public class RingPanel extends Abstract3DPanel {
             
         }
         
+        ArrayList<Double> arrayAux = new ArrayList<>();
+        
+
+        ringValues.removeAll(Arrays.asList(arrayAux));
+
+
+        
+        for(int i = 0; i < ringValues.size();i++){
+            System.out.println(ringValues.get(i));
+        }
+        
+       
+        
         int images = 1;
                 
         int tam = 0;
@@ -170,24 +160,23 @@ public class RingPanel extends Abstract3DPanel {
         
         radio = tam;
         
-        for(int i = 0; i < anillos; i++){
+        for(int i = 0; i < ringValues.size(); i++){
             slice = 2 * Math.PI /  ringValues.get(i).size();
+
             tam = ringValues.get(i).size();
           
             radio = tam;
             
-            while( (radio <= radioAnt) ){
-                
+            System.out.println("Radio: " + radio + " radio anterior: " + radioAnt);
+
+            while( (radio <= radioAnt) ){                
+         
                 radio += tam;
                 
             }
            
                 
-            
-           // System.out.println("Radio: " + radio + " radio ant:" + radioAnt);
-            
-            //radio +=3;
-         
+            double zAux = 0;
             // Coger la coordenada del Array de ringValues
             for(int j = 0; j < tam; j++){
                 
@@ -195,46 +184,46 @@ public class RingPanel extends Abstract3DPanel {
                 double newX = (0 + radio * Math.cos(angle));
                 double newY = (0 + radio * Math.sin(angle));
 
-                puntoY = getVector(images).coordinate(1)*150;
+                puntoY = getVector(images).coordinate(1)*350;
 
                 vector.x = newX;
 
                 vector.y = newY;
 
-                vector.z = puntoY;    
+                vector.z = puntoY; 
+                
+                if(j == 0){
+                    zAux = puntoY;
+                }
 
-            //    System.out.println("Vector: " + vector);
-            
                 drawImage(getResultMetada(images), vector);
                 drawPosition(vector, images);
                 
-               /// System.out.println("Indice: " + images);
                 
                
                images++;
             
             }
-            
+            drawRadio(radio,zAux);
             radioAnt = radio;
             
-          //  System.out.println("");
          
         }
 
-*/
+
     }
     
     
     // Mirar http://stackoverflow.com/questions/4864541/draw-line-in-java3d
     
-    private void drawRadio(int radio,float[] points){
+    private void drawRadio(int radio,double z){
         
-        
+
+        int coorNumber =  radio * 6;
         Transform3D t = new Transform3D();
         TransformGroup tg = new TransformGroup();
         
         Vector3d v = new Vector3d();
-        
         
         Appearance ap = new Appearance();
         
@@ -242,16 +231,28 @@ public class RingPanel extends Abstract3DPanel {
                 new PolygonAttributes( PolygonAttributes.POLYGON_LINE, 
                         PolygonAttributes.CULL_NONE, 0 );
         
-        int[] cadena = {points.length};
         
-        for(int i = 0; i < points.length; i++)
-        System.out.println("Valor de: " + i + "  - " +points[i]);
-        System.out.println("");
+       LineArray ls = new LineArray(coorNumber,LineArray.COORDINATES);
+        
+        double slice = 2 * Math.PI / coorNumber;
 
-        LineStripArray ls = new LineStripArray(points.length,
-                GeometryArray.COORDINATES, cadena);
         
-        ls.setCoordinate(0, points);
+        for(int j = 0; j < coorNumber; j++){
+                
+            double angle = slice * j;
+            double newX = (0 + radio * Math.cos(angle));
+            double newY = (0 + radio * Math.sin(angle));
+            
+            Point3f p = new Point3f();
+            
+            p.x = (float) newX;
+            p.y = (float) newY;
+            p.z = (float) z;
+                
+            ls.setCoordinate(j, p);
+            
+        }
+        
         
         t.setTranslation(v);
         
@@ -260,7 +261,7 @@ public class RingPanel extends Abstract3DPanel {
         tg.addChild(new Shape3D(ls));
         
         
-        scene.addChild(tg);
+        position.addChild(tg);
                 
         
     }
