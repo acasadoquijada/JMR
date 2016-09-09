@@ -5,29 +5,16 @@
  */
 package jmr.iu;
 
-import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javafx.scene.paint.Color;
 import javax.media.j3d.Appearance;
-import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.ColoringAttributes;
-import javax.media.j3d.Font3D;
-import javax.media.j3d.FontExtrusion;
-import javax.media.j3d.GeometryArray;
 import javax.media.j3d.LineArray;
 import javax.media.j3d.LineAttributes;
-import javax.media.j3d.LineStripArray;
-import javax.media.j3d.PointAttributes;
-import javax.media.j3d.PolygonAttributes;
 import javax.media.j3d.Shape3D;
-import javax.media.j3d.Text3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-import javax.media.j3d.View;
 import javax.vecmath.Color3f;
-import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 import jmr.result.ResultList;
@@ -214,9 +201,7 @@ public class RingPanel extends Abstract3DPanel {
 
 
     }
-    
-    
-    // Mirar http://stackoverflow.com/questions/4864541/draw-line-in-java3d
+
     
     private void drawRadio(int radio,double z){
         

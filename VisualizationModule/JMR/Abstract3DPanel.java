@@ -441,10 +441,10 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
         Vector3d v = new Vector3d(pos);
               
-        v.y += 0.7;
+        v.y += 2.1;
         
         if(index == 0){
-            v.x -= 0.2;
+            v.x -= 0.6;
         }
 
         else{
@@ -455,7 +455,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
 
         t3d.setTranslation(v);
         
-        t3d.setScale(0.7);
+        t3d.setScale(2.0);
         
         tg.setTransform(t3d);
         
@@ -652,7 +652,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         TransparencyAttributes tAttr = new TransparencyAttributes();
         tAttr.setTransparencyMode(TransparencyAttributes.NICEST);
         
-       // ap.setTransparencyAttributes(tAttr);
+        ap.setTransparencyAttributes(tAttr);
         
         int primflags = Primitive.GENERATE_NORMALS +
 
@@ -661,13 +661,13 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         float tam;
 
         if(TYPE == SPIRAL){
-            tam = 0.5f - ( spiralIndex / (float)((results.size()*3)));
+            tam = 1.5f - ( spiralIndex / (float)((results.size()*3)));
             spiralIndex++;
 
         }
         
         else{
-             tam = 0.5f;
+             tam = 1.5f;
         }
 
     
@@ -800,9 +800,9 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
         ap.setColoringAttributes(ca);
     
-        Geometry geo = createGeometry(new Point3f(-100000.0f, -0.5f, -100000.0f),
-        new Point3f(-100000.0f, -0.5f, 100000.0f),
-        new Point3f(100000.0f, -0.5f, 100000.0f), new Point3f(100000.0f, -0.5f, -100000f));
+        Geometry geo = createGeometry(new Point3f(-100000.0f, -1.5f, -100000.0f),
+        new Point3f(-100000.0f, -1.5f, 100000.0f),
+        new Point3f(100000.0f, -1.5f, 100000.0f), new Point3f(100000.0f, -1.5f, -100000f));
         
         
         Shape3D plane = new Shape3D(geo, ap);
@@ -821,7 +821,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
         vcamara.x = 0.0;
         vcamara.y = 0.0;
-        vcamara.z = 8.0;
+        vcamara.z = 25.0;
         
         
         tcamara.set(vcamara);

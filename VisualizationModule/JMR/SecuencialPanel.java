@@ -109,17 +109,19 @@ public class SecuencialPanel extends Abstract3DPanel {
 
         drawPosition(vector,0);
 
+        double separator = 4.5;
+        
         
         for(int i = 1; i < results.size(); i++){
             
             if(i%2 != 0){
-                rightPos += 1.5;
+                rightPos += separator;
                 vector.x = rightPos;
                 
             }
             
             else{
-                leftPos -= 1.5;
+                leftPos -= separator;
 
                 vector.x = leftPos;
             }
