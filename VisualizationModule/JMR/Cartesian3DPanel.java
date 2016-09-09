@@ -6,21 +6,29 @@
 package jmr.iu;
 
 /**
- *
- * @author alejandro
+ * Clase que representa la visualización con coordenadas cartesianas 3D.
+ * @since version 1.00
  */
 public class Cartesian3DPanel extends Cartesian2DPanel {
 
     /**
-     * Creates new form Cartesian2DPanel
+     * Double que representa la coordenada y
+     * @since version 1.00
      */
-    
     double z;
     
+    /**
+     * Constructor por defecto
+     * @since version 1.00
+     */
     public Cartesian3DPanel() {
         super();
     }
-
+    
+    /**
+     * Método que se encarga de dibujar las distintas imágenes en el mundo.
+     * @since version 1.00
+     */
     
     @Override
     protected void createScene() {

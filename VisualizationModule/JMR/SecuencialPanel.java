@@ -7,18 +7,18 @@ package jmr.iu;
 
 import javax.vecmath.Vector3d;
 import static jmr.iu.Abstract3DPanel.SECUENCIAL;
-import jmr.result.ResultList;
 
 /**
- *
- * @author alejandro
+ * Clase que representa la visualización secuencial.
+ * @since version 1.00
  */
 public class SecuencialPanel extends Abstract3DPanel {
 
     /**
-     * Creates new form SecuencialPanel
+     * Constructor por defecto.
+     * Indica que se desea un plano que simule el suelo.
+     * @since version 1.00
      */
-    
     
     public SecuencialPanel() {
  
@@ -30,72 +30,16 @@ public class SecuencialPanel extends Abstract3DPanel {
         
     }
     
-    
-    
-    public SecuencialPanel(ResultList list){
-        super(list);        
-    }
-    
-    @Override
-    public void add(ResultList list){
-        super.add(list);
-        
-     /*   
-        BranchGroup p = new BranchGroup();
-      
-        t = new Transform3D();
-        
-        tg = new TransformGroup();
-        
-        
-        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-        
-        tg.addChild(scene);
-
-        p.addChild(tg);
-        
-        MouseRotate myMouseRotate = new MouseRotate();
-        myMouseRotate.setTransformGroup(tg);
-        myMouseRotate.setSchedulingBounds(new BoundingSphere());
-
-        p.addChild(myMouseRotate);
-        
-        MouseTranslate myMouseTranslate = new MouseTranslate();
-        myMouseTranslate.setTransformGroup(tg);
-        myMouseTranslate.setSchedulingBounds(new BoundingSphere());
-        
-        p.addChild(myMouseTranslate);
-        
-        MouseWheelZoom myMouseZoom = new MouseWheelZoom();
-        myMouseZoom.setTransformGroup(tg);
-        myMouseZoom.setSchedulingBounds(new BoundingSphere());
-
-        p.addChild(myMouseZoom);
-        
-        simpleU.addBranchGraph(p);
-       
-        
-/*
-        objTransform.addChild(new FuzzyColorShape());
-        objRoot.addChild(new Axis());
-
-        MouseRotate myMouseRotate = new MouseRotate();
-        myMouseRotate.setTransformGroup(objTransform);
-        myMouseRotate.setSchedulingBounds(new BoundingSphere());
-        objRoot.addChild(myMouseRotate);
-
-        MouseTranslate myMouseTranslate = new MouseTranslate();
-        myMouseTranslate.setTransformGroup(objTransform);
-        myMouseTranslate.setSchedulingBounds(new BoundingSphere());
-        objRoot.addChild(myMouseTranslate);
-
-        MouseZoom myMouseZoom = new MouseZoom();
-        myMouseZoom.setTransformGroup(objTransform);
-        myMouseZoom.setSchedulingBounds(new BoundingSphere());
-        objRoot.addChild(myMouseZoom);*/
-        
-    }
+    /**
+     * Método que se encarga de dibujar las distintas imágenes en el mundo.
+     * La imagen original se posiciona en el centro
+     * Se eligen las dos imágenes mas similares a ella, 
+     * la mas similar se coloca a su izquierda, la restante a su derecha, 
+     * tras esto se vuelven a coger las siguientes dos imágenes mas 
+     * parecidas a la usada en la consulta y se repite el proceso hasta 
+     * usar todas las imágenes.
+     * @since version 1.00
+     */
     
     @Override
     public void createScene() {
@@ -134,6 +78,11 @@ public class SecuencialPanel extends Abstract3DPanel {
         
     }
     
+            /**
+     * Método en el que se indica el tipo de interacción 
+     * asi como de modificacones sobre ella.
+     * @since version 1.00
+     */
     @Override
     protected void sceneControl() {
 

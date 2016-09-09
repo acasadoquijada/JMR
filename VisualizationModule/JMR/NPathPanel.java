@@ -20,17 +20,28 @@ import javax.vecmath.Vector3d;
 import jmr.result.ResultList;
 import jmr.result.ResultMetadata;
 
+
 /**
- *
- * @author alejandro
+ * Clase que representa la visualización de n caminos.
+ * @since version 1.00
  */
 public class NPathPanel extends Abstract3DPanel {
 
-    /**
-     * Creates new form NPathPanel
-     */
+
+/**
+ * ArrayList de objetos ResultList donde se almacenan los valores
+ * de cada uno de los distintos descriptores.
+ * @since version 1.00
+ */
     
     private ArrayList<ResultList> descValues;
+    
+    /**
+     * Constructor por defecto.
+     * Indica que se desea un plano que simule el suelo.
+     * @since version 1.00
+     */
+    
     
     public NPathPanel() {
         super();
@@ -40,7 +51,11 @@ public class NPathPanel extends Abstract3DPanel {
         descValues = new ArrayList<>();
         
     }
-
+    
+    /**
+     * Método que se encarga de dibujar las distintas imágenes en el mundo.
+     * @since version 1.00
+     */
  
     @Override
     protected void createScene() {
@@ -57,13 +72,13 @@ public class NPathPanel extends Abstract3DPanel {
                 
         int radio = descNum*2;
        
-        double slice = 2 * Math.PI / descNum;
+        double slice = 2 * Math.PI / (descNum);
         double angle = 0.0;
         double newX = 0.0;
         double newZ = 0.0;
 
         
-        ResultList rl;
+        ResultList rl=null;
 
         for(int i = 0; i < descNum; i++){
  
@@ -72,8 +87,7 @@ public class NPathPanel extends Abstract3DPanel {
             descValues.add(rl);
 
         }
-        
-        
+
         for(int i = 0; i < descNum; i++){
             angle = slice * i;
             newX = (double)(0 + radio * Math.cos(angle));
@@ -110,7 +124,17 @@ public class NPathPanel extends Abstract3DPanel {
         }
 
     }
-
+    
+    
+    /**
+     * Método que se encarga de dibuja una guía para el descriptor indicado.
+     * Dicha guía es un número que se coloca al principio del camino indicando
+     * el descriptor al que corresponde dicho camino
+     * 
+     * @param pos objeto Vector3d que indica la posición de la guía
+     * @param num indica el número del descriptor
+     * @since version 1.00
+     */
     
     private void drawDescNumb(Vector3d pos, int num){
         
@@ -162,7 +186,12 @@ public class NPathPanel extends Abstract3DPanel {
         
         
     }
-
+    
+    /**
+     * Método en el que se indica el tipo de interacción 
+     * asi como de modificacones sobre ella.
+     * @since version 1.00
+     */
     @Override
     protected void sceneControl() {
 

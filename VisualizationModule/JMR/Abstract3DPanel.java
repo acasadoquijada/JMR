@@ -20,7 +20,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Enumeration;
@@ -48,11 +47,9 @@ import javax.media.j3d.TextureAttributes;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.TransparencyAttributes;
-import javax.media.j3d.ViewPlatform;
 import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.swing.JColorChooser;
-import javax.swing.JOptionPane;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
@@ -69,63 +66,236 @@ import javax.vecmath.Vector3f;
  *
  * @author alejandro
  */
+
+/**
+ * Clase abstracta que incorpora los métodos y configuraciones
+ * necesarias para que las clases hijas puedan mostrar las imágenes
+ * en el mundo tridimensional.
+ * @since version 1.00
+ */
+
 public abstract class Abstract3DPanel extends javax.swing.JPanel {
     
+    /**
+     * Objeto SimpleUniverse que contiene todo lo relacionado con el mundo 3D.
+     * 
+     * @since version 1.00
+     */
     protected SimpleUniverse simpleU;
 
-    protected Canvas3D canvas3d;
-        
-    protected Transform3D transforms[];
-
-    ViewPlatform viewplatform;
+    /**
+     * Objeto Canvas3D usado para la visualización del mundo tridimensional.
+     * 
+     * @since version 1.00
+     */
     
-    protected TransformGroup transformsGroup[],tgBehaviour;
-        
+    protected Canvas3D canvas3d;
+    
+    /**
+     * Objeto ResultList de la JMR en el que 
+     * se almacena la información obtenida de los descriptores.
+     * 
+     * @since version 1.00
+     */            
     protected ResultList results;
     
-    protected BranchGroup backgroundScene, scene, fogBranch,axis,position;
+    /**
+     * Objeto BranchGroup en el que se distribuyen las diferentes imágenes.
+     * 
+     * @since version 1.00
+     */
     
+    protected BranchGroup scene;
+    
+    /**
+     * Objeto BranchGroup en el cual se dibuja el fondo del entorno
+     * así como del suelo.
+     * 
+     * @since version 1.00
+     */
+   
+    protected BranchGroup backgroundScene;
+    
+    /**
+     * Objeto BranchGroup encargado de almacenar la niebla exponencial.
+     * 
+     * @since version 1.00
+     */
+    
+    protected BranchGroup fogBranch;
+    
+    /**
+     * Objeto BranchGroup cuya función es almacenar 
+     * la visualización de los ejes de coordenadas.
+     * 
+     * @since version 1.00
+     */
+    
+    protected BranchGroup axis;
+    
+    /**
+     * Objeto BranchGroup en el que se pintan los 
+     * indicadores de posición de las imágenes.
+     * 
+     * @since version 1.00
+     */
+    
+    protected BranchGroup position;
+       
+    /**
+     * Objeto Brackground que representa el fondo del entorno tridimensional.
+     * 
+     * @since version 1.00
+     */
     private Background background;
        
-    protected OrbitBehavior m_orbit;
+    /**
+     * Objeto OrbitBehavior encargado de la interacción con el ratón.
+     * 
+     * @since version 1.00
+     */
     
-    protected ExponentialFog myFog;
+    private OrbitBehavior m_orbit;
     
-    boolean fogActive,positionActive, planeActive,axisActive;
+    /**
+     * Objeto ExponentialFog que representa la niebla exponencial.
+     * 
+     * @since version 1.00
+     */
+    
+    private ExponentialFog myFog;
+    
+    
+    /**
+     * Objeto booleano para indicar si la niebla se encuentra activa o no.
+     * 
+     * @since version 1.00
+     */
+    protected boolean fogActive;
+
+    /**
+     * Objeto booleano para indicar si se quiere 
+     * pintar los indicadores de posición de las imágenes.
+     * 
+     * @since version 1.00
+     */
+    
+    protected boolean positionActive;
+
+    /**
+     * Objeto booleano para indicar si se desea 
+     * dibujar el plano que simula al suelo o no.
+     * 
+     * @since version 1.00
+     */
+    
+    protected boolean planeActive;
+    
+    /**
+     * Objeto booleano para indicar si se desea 
+     * dibujar los ejes de coordenadas.
+     * 
+     * @since version 1.00
+     */    
+    
+    protected boolean axisActive;
+    
+    /**
+     * Entero que indica el tipo de visualización.
+     * Se usa para tratar con el tamaño de las imágenes
+     * 
+     * @since version 1.00
+     */
     
     protected int TYPE;
     
+    /**
+     * Entero que indica que el tipo de visualización es secuencial. 
+     * @since version 1.00
+     */
+    
     protected static final int SECUENCIAL = 0;
+    
+    /**
+     * Entero que indica que el tipo de visualización es espiral.
+     * @since version 1.00
+     */
     
     protected static final int SPIRAL = 1;
     
+    /**
+     * Entero que indica que el tipo de visualización es camino.
+     * @since version 1.00
+     */
+    
     protected static final int PATH = 2;
     
+    /**
+     * Entero que indica la primitiva en la que se van a dibujar las imágenes.
+     * Esta primitiva puede ser un cubo o una esfera
+     * @since version 1.00
+     */
+    
     protected int SHAPE;
+   
+    /**
+     * Entero que indica que la primitiva es un cubo.
+     * @since version 1.00
+     */
     
     protected static final int BOX = 3;
     
+    /**
+     * Entero que indica que la primitiva es una esfera.
+     * @since version 1.00
+     */
+    
     protected static final int SPHERE = 4;
     
-    protected int CONTROL;
-      
-    protected static final int MOUSE = 5;
+    /**
+     * Objeto Dimension para indicar el tamaño del panel.
+     * @since version 1.00
+     */
     
-    protected static final int KEY = 6;  
-
     protected final static Dimension DEFAULT_COMMON_SIZE = new Dimension(100,100);
-
-    TransformGroup camara;
-    
-    private Transform3D tcamara;
-    private Vector3d vcamara;
-    
-    private int spiralIndex;
 
     
     /**
-     * Creates new form AbstractVisualizationPanel
+     * Objeto TransformGroup asociado a la cámara del entorno tridimensional.
+     * @since version 1.00
      */
+        
+    private TransformGroup camara;
+    
+    /**
+     * Objeto Transform3D asociado al control de la cámara del entorno tridimensional.
+     * @since version 1.00
+     */
+    
+    private Transform3D tcamara;
+    
+    /**
+     * Objeto Vector3d asociado a la posición de la cámara del entorno tridimensional.
+     * @since version 1.00
+     */
+    
+    private Vector3d vcamara;
+    
+    /**
+     * Entero asociado al tamaño de las imágenes en la visualización espiral.
+     * @since version 1.00
+     */
+    
+    private int spiralIndex;
+    
+
+    /**
+     * Constructor por defecto.
+     * Se encarga de instanciar todo lo necesario para la creación e interacción
+     * del mundo tridimensional
+     * 
+     * @since version 1.00
+    */
     
     public Abstract3DPanel(){
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -151,7 +321,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
     
         this.vcamara    = new Vector3d();
         this.tcamara    = new Transform3D();
-        this.tgBehaviour = new TransformGroup();
+
 
         
         GraphicsConfiguration config =
@@ -181,9 +351,6 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
 
         cameraPos();
         
-        //ViewPlatform
-        viewplatform = simpleU.getViewingPlatform().getViewPlatform();
-        
         simpleU.getViewer().getView().setBackClipDistance(100000);
 
         // To avoid problems between Java3D and Swing
@@ -206,6 +373,15 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
     }
   
 
+    /**
+     * Constructor con parámetros.
+     * Este constructor se encarga de obtener la información necesaria de los
+     * descriptores y almacenarla llamando al método add
+     * 
+     * @param list Objeto ResultList con la información sobre los descriptores.
+     * @since version 1.00
+     */
+    
     public Abstract3DPanel(ResultList list){
         this();
         if (list!=null){          
@@ -213,6 +389,15 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         }    
 
     }
+    
+    /**
+     * Almacena la información de los descriptores.
+     * Este método almacena la información obtenida en el parámetro list.
+     * También llama a una serie de métodos para crear la escena. 
+     * @param list Objeto ResultList con la información sobre los descriptores.
+     * @since version 1.00
+     */
+    
     
     public void add(ResultList list){
         
@@ -222,7 +407,6 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         createScene();
         
         mouseOver();
-        
         
         simpleU.addBranchGraph(scene);
         
@@ -249,6 +433,20 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
                 
 
     }
+    
+    /**
+     * Añade la interacción por ratón.
+     * Se encarga de añadir la interacción por ratón a la vista que asi lo desee.
+     * 
+     * Rotación: Arrastrar el ratón con el botón izquierdo pulsado.
+     * Desplazamiento: Arrastrar el ratón con el botón derecho pulsado.
+     * Zoom: Utilizar la rueda del ratón.
+     *
+     * @param rotX booleano que si indica si se desea rotar sobre el eje x.
+     * @param rotY booleano que si indica si se desea rotar sobre el eje y.
+     * @since version 1.00
+     */
+    
     
     protected void mouseControl(boolean rotX, boolean rotY){
         
@@ -280,6 +478,22 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
     }
     
+    /**
+     * Añade la interacción por teclado.
+     * Se encarga de añadir la interacción por teclado a la vista que asi lo desee.
+     * Rotación izquierda: Flecha izquierda.
+     * Rotación derecha: Flecha derecha.
+     * Acercar zoom: Flecha arriba.
+     * Alejar zoom: Flecha abajo.
+     * Rotación arriba: PgUp.
+     * Rotación abajo: PgDn.
+     * Desplazamiento izquierda: Alt + flecha izquierda.
+     * Desplazamiento derecha: Alt + flecha derecha.
+     * Desplazamiento arriba: Alt + PgUp.
+     * Desplazamiento abajo: Alt + PgDn.
+     * @since version 1.00
+     */
+    
     protected void keyControl(){
 
         KeyNavigatorBehavior navegacion = new KeyNavigatorBehavior(camara);
@@ -293,6 +507,14 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
     }
     
+    /**
+     * Posibilita la obtención de información en el mundo tridimensional.
+     * Este método añade al mundo 3D un comportamiento necesario para obtener
+     * información de cada una de las imágenes mostradas usando el ratón
+     * @since version 1.00
+     */
+    
+    
     
     private void mouseOver(){
         
@@ -304,6 +526,11 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
         scene.addChild(mouseOver);
     }
+    
+    /**
+     * Crea la niebla exponencial.
+     * @since version 1.00
+     */
     
     private void createFog(){
         myFog = new ExponentialFog();
@@ -320,7 +547,12 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
     }
     
  
-    
+    /**
+     * Devuelve un BufferedImage dado un índice.
+     * @param index entero que indica la imagen.
+     * @return La imagen asociada a ese índice.
+     * @since version 1.00
+     */
     public BufferedImage getImage(int index){
         
         ResultMetadata r = (ResultMetadata)this.results.get(index);
@@ -330,6 +562,15 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         return img;
         
     }
+
+    /**
+     * Devuelve un BufferedImage dado un ResultMetada.
+     * @param r objeto ResultMetada del cual se quiere obtener la imagen.
+     * @return La imagen asociada al ResultMetada.
+     * @since version 1.00
+     */
+    
+    
     
     public BufferedImage getImage(ResultMetadata r){
              
@@ -338,6 +579,13 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         return img;
     }
     
+    
+    /**
+     * Devuelve un Vector de la JMR dado un índice.
+     * @param index entero que indica el vector.
+     * @return El vector asociado a ese índice.
+     * @since version 1.00
+     */
     public Vector getVector(int index){
         
         ResultMetadata r = (ResultMetadata)this.results.get(index);
@@ -347,6 +595,18 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         return vec;
     } 
     
+    
+    /**
+     * Devuelve un ResultList dada una coordenada.
+     * Método que devuelve un ResultList cuyos vectores poseen
+     * el valor del descriptor indicado por el parámetro coordenada.
+     * 
+     * @param coor entero que indica la coordenada.
+     * @return Objeto ResultList.
+     * @since version 1.00
+     */
+    
+    
     public ResultList getResultList(int coor){
         
         ResultList l = new ResultList();
@@ -354,9 +614,7 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         int tam = results.size();
         
         int numDes = getVector(0).dimension();
-        
-        
-        
+
         for(int i = 1; i < tam; i++){
             
             Vector v = new Vector(1);
@@ -373,6 +631,13 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         return l;
     }
     
+    /**
+     * Devuelve un ResultMetadata dado un índice.
+     * @param index entero que indica el ResultMetadata.
+     * @return ResultMetadata asociado a ese índice.
+     * @since version 1.00
+     */
+    
     public ResultMetadata getResultMetada(int index){
        
         ResultMetadata r = (ResultMetadata)this.results.get(index);
@@ -381,29 +646,40 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
  
     }
     
+    /**
+     * Reinicia la posición de la cámara
+     * @since version 1.00
+     */
+    
     protected void resetView(){
         cameraPos();
     }
     
-    protected void updateInfo(double info1,double info2){
-        
-        try{
-            String m;
-            m = "Mean: " + String.valueOf(info1)+
-                    " - Standar deviation: " + String.valueOf(info2);
-            
-            
-            meanLabel.setText(m);    
-        }catch(Error e){
-            
-        }
-
-        
-    }
+    
+    /**
+     * Método abstracto que indica la manera en la que las diferentes imágenes
+     * se distribuyen a lo largo del entorno.
+     * @since version 1.00
+     */
     
     protected abstract void createScene();
     
+    
+    /**
+     * Método abstracto en el cual se debe indicar la interacción
+     * deseada así como posibles modificaciones sobre esta
+     * @since version 1.00
+     */
+    
     protected abstract void sceneControl();
+    
+    
+    /**
+     * Dibuja el indicador de posición para una imagen.
+     * @param pos Posición de la imagen
+     * @param index Número de la imagen
+     * @since version 1.00
+     */
     
     protected void drawPosition(Vector3d pos, int index){
         
@@ -464,6 +740,13 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         position.addChild(tg);
 
     }
+
+    
+    /**
+     * Activa o desactiva la niebla exponencial.
+     * @param activate booleano que indica la activación/desactivación de la niebla
+     * @since version 1.00
+     */
     
     protected void fog(boolean activate){
                                 
@@ -479,35 +762,44 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * Devuelve el estado de la niebla.
+     * @return booleano que indica si la niebla esta activa o no.
+     * @since version 1.00
+     */
+    
     protected boolean fogActive(){
         
         return fogActive;
         
     }
     
+    /**
+     * Devuelve el estado de los indicadores de posición.
+     * 
+     * @return booleano que indica si los indicadores de posición
+     * de las imágenes estan activados
+     * @since version 1.00
+     */
+    
     protected boolean positionActive(){
         return positionActive;
     }
     
-    private void clean(){
-                
-        fogBranch.detach();
-    }
+    /**
+     * Método encargado de volver a dibujar los objetos del mundo tridimensional.
+     * Es llamado cuando se cambia el tipo de primitiva
+     * @since version 1.00
+     */
     
-    protected void deteachScene(){
-
-        
-
-    }
-    
-    protected void rePaint(){
+    private void rePaint(){
         scene.detach();
         position.detach();
 
         scene.removeAllChildren();
         position.removeAllChildren();
         
-        clean();
+        fogBranch.detach();
                 
         if(TYPE == SPIRAL)
             spiralIndex = 0;
@@ -526,91 +818,15 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
     }
     
 
-    
-    protected void drawImage(BufferedImage img, Vector3d pos){
-        
-        
-        TextureLoader loader = new TextureLoader(img,new Container());
-        Texture tex = loader.getTexture();
-
-        Transform3D trans = new Transform3D();
-        TransformGroup tg1 = new TransformGroup();
-        
-        Appearance ap = new Appearance();
-        
-        tex.setBoundaryModeS(Texture.CLAMP_TO_EDGE );
-
-        tex.setBoundaryModeT(Texture.CLAMP_TO_EDGE );
-        
-        TextureAttributes texAttr = new TextureAttributes();
-        
-        texAttr.setTextureMode(TextureAttributes.MODULATE);
-
-        ap.setTexture(tex);
-
-        ap.setTextureAttributes(texAttr);   
-        
-        PointAttributes pa = new PointAttributes();
-        //pa.setPointSize(5f);
-        pa.setPointAntialiasingEnable(true);
-        
-        LineAttributes la=new LineAttributes();
-        la.setLineAntialiasingEnable(true);
-    
-        ap.setLineAttributes(la);     
-        ap.setPointAttributes(pa);
-        
-        TransparencyAttributes tAttr = new TransparencyAttributes();
-        tAttr.setTransparencyMode(TransparencyAttributes.NICEST);
-        
-       // ap.setTransparencyAttributes(tAttr);
-        
-        int primflags = Primitive.GENERATE_NORMALS +
-
-        Primitive.GENERATE_TEXTURE_COORDS; 
-         
-        float tam;
-
-        if(TYPE == SPIRAL){
-            tam = 0.5f - (spiralIndex/1500f);
-            spiralIndex++;
-           // tam = -0.0688889f;
-        }
-        
-        else{
-             tam = 0.5f;
-        }
-
-       // System.out.println("Imagen: " + index + " tamaño" + tam);
-    
-       Primitive b = null;
-       
-       
-       switch(SHAPE){
-           
-           case BOX:
-                b = new Box(tam,tam,tam,primflags,ap);
-
-                break;
-            
-           case SPHERE:
-                b = new Sphere(tam,primflags,64,ap);
-   
-                break;
-       }
-
-       
-        trans.setTranslation(pos);
-       
-    //    tg1.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        
-        tg1.setTransform(trans);
-        
-        tg1.addChild(b);
-        
-        this.scene.addChild(tg1);   
-        
-    };
+    /**
+     * Dibuja la imagen asociada a rm en la posición indica por pos.
+     * Del ResultMetada obtenido como parámetro se obtiene a parte de la propia
+     * imagen, información sobre ella, necesaria para poder recuperarla cuando se
+     * use el ratón en la visualización.
+     * @param rm Objeto ResultMetada que contiene una imagen e información sobre ella
+     * @param pos Objeto Vector3d que indica la posición de la imagen en el mundo 3D
+     * @since version 1.00
+     */
     
    protected void drawImage(ResultMetadata rm, Vector3d pos){
         
@@ -703,14 +919,11 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         this.scene.addChild(tg1);   
         
     };
-   
-
-   protected void popMenuExpansion(javax.swing.JMenu menu){
        
-       jPopupMenu.add(menu);
-       
-   }
-    
+   /**
+     * Crea un objeto BranchGroup en el que se dibujan los ejes de coordenadas.
+     * @since version 1.00
+     */ 
     
     
     protected void axis(){
@@ -781,13 +994,11 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         simpleU.addBranchGraph(axis);
      
     }
-    
-    protected void backgroundColor(Color3f c){
-        
-        this.background.setColor(c);
-        
-    }
-    
+
+    /**
+     * Crea un objeto Shape3D que representa el plano que simula el suelo.
+     * @since version 1.00
+     */ 
     
     private Shape3D createPlane(){
      
@@ -812,6 +1023,10 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
     }
     
+    /**
+     * Establece la posición de la cámara.
+     * @since version 1.00
+     */ 
     
     protected void cameraPos(){
         
@@ -830,7 +1045,10 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         
     }
     
-    
+    /**
+     * Crea un objeto BranchGroup que representa el fondo del entorno 3D.
+     * @since version 1.00
+     */ 
     
     protected void createBackground(){
         
@@ -849,6 +1067,16 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
 
 
     }
+    
+    /**
+     * Crea un objeto Geometry necesario para dibujar el plano.
+     * @param A primer punto del plano.
+     * @param B segundo punto del plano.
+     * @param C tercer punto del plano.
+     * @param D cuarto punto del plano.
+     * @return Objeto geometría necesario para dibujar el plano.
+     * @since version 1.00
+     */ 
     
     protected Geometry createGeometry(Point3f A, Point3f B, Point3f C, Point3f D) {
 
@@ -875,14 +1103,12 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
       return plane;
     }
     
+    /**
+     * Método en el que se establecen los distintos listener para el objeto Canvas3D.
+     * @since version 1.00
+     */ 
     private void mouseBehaviour(){
 
-        this.canvas3d.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                formKeyPressed(evt);
-            }
-        });
         
         this.canvas3d.addMouseListener(new java.awt.event.MouseAdapter() {
             
@@ -909,6 +1135,11 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
 
     }
     
+    /**
+     * Método encargado de mostrar el popMenu por pantalla.
+     * @since version 1.00
+     */ 
+    
     private void popMenu(java.awt.event.MouseEvent evt){
 
         if (evt.isPopupTrigger()) {
@@ -917,276 +1148,59 @@ public abstract class Abstract3DPanel extends javax.swing.JPanel {
         }
     
     }
-    
-    private Point3d getIntersection(Point3d line1, Point3d line2, 
-			Point3d plane1, Point3d plane2, Point3d plane3) {
-        
-        Vector3d p1 = new Vector3d(plane1);
-        Vector3d p2 = new Vector3d(plane2);
-        Vector3d p3 = new Vector3d(plane3);
-        Vector3d p2minusp1 = new Vector3d(p2);
-        p2minusp1.sub(p1);
-        Vector3d p3minusp1 = new Vector3d(p3);
-        p3minusp1.sub(p1);
-        Vector3d normal = new Vector3d();
-        normal.cross(p2minusp1, p3minusp1);
-        // The plane can be defined by p1, n + d = 0
-        double d = -p1.dot(normal);
-        Vector3d i1 = new Vector3d(line1);
-        Vector3d direction = new Vector3d(line1);
-        direction.sub(line2);
-        double dot = direction.dot(normal);
-        if (dot == 0) return null;
-        double t = (-d - i1.dot(normal)) / (dot);
-        Vector3d intersection = new Vector3d(line1);
-        Vector3d scaledDirection = new Vector3d(direction);
-        scaledDirection.scale(t);
-        intersection.add(scaledDirection);
-        Point3d intersectionPoint = new Point3d(intersection);
-        return intersectionPoint;
-    }
-	
-    
-    
-    private Point3d get3DPoint(MouseEvent event){
-        Point3d eyePos = new Point3d();
-        Point3d mousePos = new Point3d();
-        canvas3d.getCenterEyeInImagePlate(eyePos);
-        canvas3d.getPixelLocationInImagePlate(event.getX(), event.getY(), mousePos);
-        Transform3D transform = new Transform3D();
-        canvas3d.getImagePlateToVworld(transform);
-        transform.transform(eyePos);
-        transform.transform(mousePos);
-        Vector3d direction = new Vector3d(eyePos);
-        direction.sub(mousePos);
-        // three points on the plane
-        Point3d p1 = new Point3d(.5, -.5, .5);
-        Point3d p2 = new Point3d(.5, .5, .5);
-        Point3d p3 = new Point3d(-.5, .5, .5);
-        Transform3D currentTransform = new Transform3D();	
-        Point3d intersection = getIntersection(eyePos, mousePos, p1, p2, p3);
 
-     
-      //  currentTransform.invert();
-        //currentTransform.transform(intersection);
-        return intersection;	             
-    }
+    /**
+     * Clase que representa el comportamiento del 
+     * ratón cuando se coloca sobre una imagen.
+     * @param evt evento desencadenado al pulsar el menu item
+     * @since version 1.00
+     */
 
-    
-    private void canvas3dmousePressed(java.awt.event.MouseEvent evt){
+    public class MouseOverBehavior extends Behavior {
 
-        
-        if(evt.getButton() == java.awt.event.MouseEvent.BUTTON1){
-        
-            get3DPoint(evt);
-            
-         /*   
-            
-            
-            
-            
-            PickInfo pickInfo = null;
-
-            PickCanvas pickCanvas = new PickCanvas(canvas3d, scene);
-            pickCanvas.setMode(PickTool.GEOMETRY_INTERSECT_INFO);
-
-            Point3d eyePos = pickCanvas.getStartPosition();
-            // get the viewer's eye location
-
-            pickInfo = pickCanvas.pickClosest();
-            // get the intersected shape closest to the viewer
-
-            if (pickInfo != null) {
-                pickInfo.getClosestIntersectionPoint();
-                eyePos = pickInfo.getClosestIntersectionPoint();
-                // get the closest intersect to the eyePos point
-                //Point3d intercept = pi.getPointCoordinatesVW();
-                System.out.println(eyePos);
-                // extract the intersection pt in scene coords space
-                // use the intersection pt in some way...
-            }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-          /*  
-            
-            int x = evt.getX();
-            int y = evt.getY();
-            
-            Point3d eye_pos = new Point3d();
-            Point3d mouse_pos = new Point3d(); 
-            
-            Transform3D motion = new Transform3D();
-            canvas3d.getImagePlateToVworld(motion); 
-            canvas3d.getCenterEyeInImagePlate(eye_pos);
-            canvas3d.getPixelLocationInImagePlate(x, y, mouse_pos);
-            
-            motion.transform(eye_pos);
-            motion.transform(mouse_pos); 
-            
-            Vector3d direction = new Vector3d(mouse_pos); 
-            
-            direction.sub(eye_pos); 
-            
-            Vector3d straightDown = new Vector3d(0, 0, -1.0f); 
-            
-            straightDown.normalize(); 
-            
-            direction.normalize();
-            
-            double rayLength = direction.dot(straightDown);
-            double rayamount = mouse_pos.z / rayLength; 
-            
-            double test = direction.length();
-            direction.scale(rayamount);
-            mouse_pos.add(direction);
-            
-            Vector3d v = new Vector3d();
-            
-            tg =  m_orbit.getViewingPlatform().getViewPlatformTransform();
-
-            Transform3D tra = new Transform3D();
-            tg.getTransform(tra);
-            tra.get(v);
-
-            Point3d pntd = new Point3d(v.x,v.y,0);
-            
-            camara.getTransform(tcamara);
-            tcamara.get(vcamara); 
-            
-            System.out.println("Mouse pos" + mouse_pos + "\n" + "Camara" + vcamara
-            +"\n" + "View:" + pntd +"\n\n");
-            
-            
-            
-            
-            
-            */
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            /*   Transform3D t = new Transform3D();
-            Transform3D t2 = new Transform3D();
-
-            Vector3d v = new Vector3d();
-            
-            Vector3d v2= new Vector3d();
-            Point3d p = new Point3d();
-            
-            canvas3d.getCenterEyeInImagePlate(p);
-         
-            t2.get(v2);
-    
-            canvas3d.getView().getUserHeadToVworld(t2);
-            tg =  m_orbit.getViewingPlatform().getViewPlatformTransform();
-
-            tg.getTransform(t);
-            t.get(v);
-            
-            camara.getTransform(tcamara);
-            tcamara.get(vcamara);  
-            
-            System.out.println("V2:" + vcamara +"\n" + " P: " + p + "\n" + "V:" + v +"\n\n");
-            /*
-            
-            
-            
-            tg =  m_orbit.getViewingPlatform().getViewPlatformTransform();
-
-            tg.getTransform(t);
-            t.get(v);
-
-            Point3d pntd = new Point3d(v.x,v.y,0);
-
-            System.out.println("Vector: " + v +"  Punto: " + pntd);
-            m_orbit.setRotationCenter(pntd);
-            
-            ViewPlatform vp = new ViewPlatform();
-          
-            this.simpleU.getViewingPlatform().setViewPlatform(vp);*/
-        }
-    }
-    
-    
-    
-    private void formKeyPressed(java.awt.event.KeyEvent evt) { 
-        
-        ViewPlatform vp = canvas3d.getView().getViewPlatform();
-        
-        /*
-        
-        // Si el valor de x es 0 NO dejarlo pasar
-    
-        double xLimit = 0.17918508094160188;
-        camara.getTransform(tcamara);
-        
-        tcamara.get(vcamara);
-        
-        System.out.println("Antes: " + vcamara);
-
-        if(vcamara.x < xLimit){
-            vcamara.x = xLimit;
-        }
-        
-        tcamara.set(vcamara);
-        
-        camara.setTransform(tcamara);
-        
-        
-        System.out.println("Despues: " + vcamara);
-        
-        */
-    }
-    
-    
-public class MouseOverBehavior extends Behavior {
-
+    /**
+     * Objeto PickCanvas usado para la selección de primitivas mediante ratón
+     * @since version 1.00
+     */ 
     private com.sun.j3d.utils.picking.PickCanvas pickCanvas;
+
+    /**
+     * Objeto PickResult usado para la selección de primitivas mediante ratón
+     * @since version 1.00
+     */ 
+    
     private PickResult pickResult;
 
-    private boolean isObjectSelectedBefore = false;
-    private Shape3D oldPickedNode = new Shape3D ();
+    /**
+     * Objeto BranchGroup sobre el que va a actuar este behavior
+     * @since version 1.00
+     */ 
+    
     private BranchGroup dataBranchGroup;
 
+    /**
+     * Objeto Primitiva que representa la imagen seleccionada mediante el ratón
+     * @since version 1.00
+     */ 
+    
     private Primitive p;
+    
+    /**
+     * Objeto Canvas3D sobre el que va a actuar este behavior
+     * @since version 1.00
+     */ 
+    
+    
     private Canvas3D canvas;
-    private boolean overAnObject = false;
 
-    private BranchGroup shapeLabelBG = new BranchGroup ();
-
+        /**
+         * Constructor que establece el objeto Canvas3D y 
+         * BranchGroup sobre los que van a actuar este behavior
+         * @param canvas Objeto Canvas3D
+         * @param dataBranchGroup Objeto BranchGroup
+         * @since version 1.00
+         */
+    
     public MouseOverBehavior (Canvas3D canvas, BranchGroup dataBranchGroup) {
         this.canvas = canvas;
         this.dataBranchGroup = dataBranchGroup;
@@ -1198,10 +1212,27 @@ public class MouseOverBehavior extends Behavior {
 
     }
 
+    /**
+     * Método initialize.
+     * Se indica que condición provoca que se active este behavior.
+     * En este caso se activa al mover el ratón
+     * @since version 1.00
+     */ 
+    
+    
     @Override
     public void initialize () {
         wakeupOn (new WakeupOnAWTEvent (MouseEvent.MOUSE_MOVED));
     }
+    
+    /**
+     * Método que se activa cuando el behavior se despierta.
+     * Obtiene la información de la imagen y la muestra en la esquina inferior
+     * izquierda del panel
+     * 
+     * @param criteria Criterios que han provocado la activación del behavior
+     * @since version 1.00
+     */ 
 
     @Override
     public void processStimulus (Enumeration criteria) {
@@ -1250,7 +1281,7 @@ public class MouseOverBehavior extends Behavior {
         }
         wakeupOn (new WakeupOnAWTEvent (MouseEvent.MOUSE_MOVED));
     }
-}
+    }
     
     
     
@@ -1374,12 +1405,24 @@ public class MouseOverBehavior extends Behavior {
         add(infoPanel, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    /**
+     * Se encarga de reiniciar la vista.
+     * @param evt evento desencadenado al pulsar el menu item
+     * @since version 1.00
+     */ 
     private void jMenuItemResetViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemResetViewActionPerformed
 
         resetView();
         
     }//GEN-LAST:event_jMenuItemResetViewActionPerformed
 
+    
+    /**
+     * Establece como primitiva el cubo y vuelve a pintar la visualización.
+     * @param evt evento desencadenado al pulsar el menu item
+     * @since version 1.00
+     */
     private void jCheckBoxMenuItemBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemBoxActionPerformed
 
 
@@ -1392,6 +1435,12 @@ public class MouseOverBehavior extends Behavior {
 
     }//GEN-LAST:event_jCheckBoxMenuItemBoxActionPerformed
 
+    /**
+     * Establece como primitiva la esfera y vuelve a pintar la visualización.
+     * @param evt evento desencadenado al pulsar el menu item
+     * @since version 1.00
+     */
+    
     private void jCheckBoxMenuItemSphereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemSphereActionPerformed
 
         if(jCheckBoxMenuItemSphere.isSelected()){
@@ -1403,6 +1452,12 @@ public class MouseOverBehavior extends Behavior {
         
     }//GEN-LAST:event_jCheckBoxMenuItemSphereActionPerformed
 
+    /**
+     * Establece el color del fondo del entorno.
+     * @param evt evento desencadenado al pulsar el menu item
+     * @since version 1.00
+     */
+    
     private void jMenuItemBackgroundColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemBackgroundColorActionPerformed
        
         Color auxColor;
@@ -1415,12 +1470,19 @@ public class MouseOverBehavior extends Behavior {
 
              color = new Color3f(auxColor);
 
-             this.backgroundColor(color);
+             this.background.setColor(color);
+
             }
              
 
     }//GEN-LAST:event_jMenuItemBackgroundColorActionPerformed
 
+        /**
+     * Establece el color de la niebla.
+     * @param evt evento desencadenado al pulsar el menu item
+     * @since version 1.00
+     */
+    
     private void jMenuItemFogColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFogColorActionPerformed
 
         Color auxColor;
@@ -1441,6 +1503,12 @@ public class MouseOverBehavior extends Behavior {
         
     }//GEN-LAST:event_jMenuItemFogColorActionPerformed
 
+    
+    /**
+     * Activa/desactiva la niebla.
+     * @param evt evento desencadenado al pulsar el menu item
+     * @since version 1.00
+     */
     private void jCheckBoxMenuItemFogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemFogActionPerformed
         
         if(jCheckBoxMenuItemFog.isSelected()){

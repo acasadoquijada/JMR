@@ -5,24 +5,34 @@
  */
 package jmr.iu;
 
-import javax.vecmath.Vector3d;
-
 /**
- *
- * @author alejandro
+ * Clase que representa la visualización con coordenadas polares 3D.
+ * @since version 1.00
  */
 public class Polar3DPanel extends Polar2DPanel {
 
+    /**
+    * Double que representa el 
+    * @since version 1.00
+    */    
+    double azimut;
     
-    double phi;
-    
+
+    /**
+     * Constructor por defecto.
+     * @since version 1.00
+     */
     public Polar3DPanel() {
         super();
-        planeActive = true;
-        v = new Vector3d();
+
         
     }
-
+    
+    /**
+     * Método que se encarga de dibujar las distintas imágenes en el mundo.
+     * @since version 1.00
+     */
+    
     
     @Override
     protected void createScene() {
@@ -44,13 +54,18 @@ public class Polar3DPanel extends Polar2DPanel {
         }
         
     }
-
-    @Override
-    protected void sceneControl() {
-  
-        keyControl();
-
-    }
+    
+        /**
+     * Método que calcula el punto en el espacio y lo multiplica por value
+     * para evitar que los puntos aparezcan en un rango muy pequeño.
+     * Dados x, y e z, se calcula el valor del radio, del ángulo phita, del azimut
+     * y se almacenan sus valores en el vector de posición.
+     * 
+     * @param x indica la posición en el eje x en coordenadas cartesianas
+     * @param y indica la posición en el eje y en coordenadas cartesianas
+     * @param z indica la posición en el eje z en coordenadas cartesianas
+     * @since version 1.00
+     */
 
     private void calculateCoor(double x, double y, double z){
             
@@ -58,11 +73,11 @@ public class Polar3DPanel extends Polar2DPanel {
             
             theta = Math.acos(z/r);
             
-            phi = Math.atan2(y,x);
+            azimut = Math.atan2(y,x);
             
             v.x = r * value;
             v.y = theta * value;
-            v.z = phi * value; 
+            v.z = azimut * value; 
     }
     
 

@@ -8,21 +8,49 @@ package jmr.iu;
 import javax.vecmath.Vector3d;
 
 /**
- *
- * @author alejandro
+ * Clase que representa la visualización con coordenadas polares 2D.
+ * @since version 1.00
  */
 public class Polar2DPanel extends Abstract3DPanel {
 
-    /**
-     * Creates new form Cartesian2DPanel
-     */
     
+    
+    /**
+    * Double que representa la distancia al centro de coordenadas.
+    * @since version 1.00
+    */
+
     protected double r;
+    
+    /**
+    * Double que representa el ángulo phita sobre el eje x
+    * @since version 1.00
+    */
+    
     protected double theta;
+    
+        /**
+     * Double que representa el valor por el cual se multiplicarán las coordenadas
+     * para estas se distribuyan por el mundo en lugar de concentrarse
+     * en un único lugar
+     * @since version 1.00
+     */
     
     protected final double value;
     
+    /**
+     * Objeto Vector3d que representa un punto en el espacio tridimensional
+     * @since version 1.00
+     */
     protected Vector3d v;
+    
+        
+    /**
+     * Constructor por defecto.
+     * Indica que se desea un plano que simule el suelo y el valor de value.
+     * @since version 1.00
+     */
+    
     
     public Polar2DPanel() {
 
@@ -33,6 +61,10 @@ public class Polar2DPanel extends Abstract3DPanel {
         
     }
 
+    /**
+     * Método que se encarga de dibujar las distintas imágenes en el mundo.
+     * @since version 1.00
+     */
     
     @Override
     protected void createScene() {
@@ -46,7 +78,7 @@ public class Polar2DPanel extends Abstract3DPanel {
             double x = getVector(i).coordinate(0);
             double y = getVector(i).coordinate(1);
             
-            calculateCoor(x, y, i);
+            calculateCoor(x, y);
             
             
             drawImage(getResultMetada(i), v);
@@ -55,14 +87,31 @@ public class Polar2DPanel extends Abstract3DPanel {
         
     }
 
+            /**
+     * Método en el que se indica el tipo de interacción 
+     * asi como de modificacones sobre ella.
+     * @since version 1.00
+     */
+    
     @Override
     protected void sceneControl() {
   
         keyControl();
 
     }
+    
+        /**
+     * Método que calcula el punto en el espacio y lo multiplica por value
+     * para evitar que los puntos aparezcan en un rango muy pequeño.
+     * Dados x e y se calcula el valor del radio, del ángulo phita y se almacenan
+     * sus valores en el vector de posición.
+     * 
+     * @param x indica la posición en el eje x en coordenadas cartesianas
+     * @param y indica la posición en el eje y en coordenadas cartesianas
+     * @since version 1.00
+     */
 
-    protected void calculateCoor(double x, double y, int index){
+    protected void calculateCoor(double x, double y){
             
             r = Math.sqrt((x*x) + (y*y));
             

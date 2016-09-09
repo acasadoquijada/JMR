@@ -5,41 +5,51 @@
  */
 package jmr.iu;
 
-import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
-import javax.media.j3d.BoundingSphere;
-import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import jmr.result.ResultList;
 
 /**
- *
- * @author alejandro
+ * Clase que representa la visualización en espiral.
+ * @since version 1.00
  */
 public class SpiralPanel extends Abstract3DPanel {
 
+
     /**
-     * Creates new form SpiralVisualization
-     */
-    
+    * Objeto Vector3d que representa una posición en el espacio tridimensional
+    * @since version 1.00
+    */
     private Vector3d vector;
+
+    /**
+    * Float que indica el decremento de la posición de las imágenes en el eje z.
+    * @since version 1.00
+    */
+    
     
     private final float Zdecrement = 0.025f;
     
+        /**
+     * Constructor por defecto.
+     * Indica que el tipo de visualización es espiral.
+     * @since version 1.00
+     */
     
     public SpiralPanel() {  
 
         super();
         
-        
         TYPE = SPIRAL;
 
 
     }
-    
-    public SpiralPanel(ResultList list){
-        super(list);
-    }
-    
+    /**
+     * Método que se encarga de dibujar las distintas imágenes en el mundo.
+     * La imagen original se posiciona en el centro
+     * El resto se colocan a su alrededor siguiendo una espiral en sentido 
+     * antihorario.
+     * @since version 1.00
+     */
     @Override
     public void createScene() {
         
@@ -158,7 +168,11 @@ public class SpiralPanel extends Abstract3DPanel {
         }
     
     }
-
+            /**
+     * Método en el que se indica el tipo de interacción 
+     * asi como de modificacones sobre ella.
+     * @since version 1.00
+     */
 
     @Override
     protected void sceneControl() {

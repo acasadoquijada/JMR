@@ -8,21 +8,49 @@ package jmr.iu;
 import javax.vecmath.Vector3d;
 
 /**
- *
- * @author alejandro
+ * Clase que representa la visualización con coordenadas cartesianas 2D.
+ * @since version 1.00
  */
 public class Cartesian2DPanel extends Abstract3DPanel {
 
+    
     /**
-     * Creates new form Cartesian2DPanel
+     * Double que representa la coordenada x
+     * @since version 1.00
+     */
+    protected double x;
+
+    /**
+     * Double que representa la coordenada y
+     * @since version 1.00
      */
     
-    protected double x;
     protected double y;
+    
+    
+    /**
+     * Double que representa el valor por el cual se multiplicarán las coordenadas
+     * para estas se distribuyan por el mundo en lugar de concentrarse
+     * en un único lugar
+     * @since version 1.00
+     */
     
     protected double value;
     
+    
+    /**
+     * Objeto Vector3d que representa un punto en el espacio tridimensional
+     * @since version 1.00
+     */
+    
+    
     protected Vector3d v;
+    
+    /**
+     * Constructor por defecto.
+     * Indica que se desea un plano que simule el suelo y el valor de value.
+     * @since version 1.00
+     */
     
     public Cartesian2DPanel() {
 
@@ -34,6 +62,10 @@ public class Cartesian2DPanel extends Abstract3DPanel {
         
     }
 
+    /**
+     * Método que se encarga de dibujar las distintas imágenes en el mundo.
+     * @since version 1.00
+     */
     
     @Override
     protected void createScene() {
@@ -51,6 +83,11 @@ public class Cartesian2DPanel extends Abstract3DPanel {
         
     }
 
+    /**
+     * Método en el que se indica el tipo de interacción 
+     * asi como de modificacones sobre ella.
+     * @since version 1.00
+     */
     @Override
     protected void sceneControl() {
   
@@ -58,6 +95,15 @@ public class Cartesian2DPanel extends Abstract3DPanel {
         
         
     }
+    
+    /**
+     * Método que calcula el punto en el espacio y lo multiplica por value
+     * para evitar que los puntos aparezcan en un rango muy pequeño.     
+     * @param x indica la posición en el eje x
+     * @param y indica la posición en el eje y
+     * @param index índice de la imagen.
+     * @since version 1.00
+     */
     
     protected void calculatePosition(double x, double y,int index){
             x = getVector(index).coordinate(0) * value;
